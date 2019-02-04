@@ -1,6 +1,6 @@
 # Lit CLI
 
-The Lit CLI can be used to build modular applications using multiple git submodules. This cli extends the git cli so that you can develop on applications that use hardlinking and git submodules as if your were working on a less complex project
+The Lit CLI can be used to build modular applications utilizing an architecture built on hard links and git submodules. This cli extends the git cli so that the commands are indistinguishable
 
 ## Install
 
