@@ -26,7 +26,7 @@ Ex.
 	{
 		"dest" : "src/some/other/path",
 		"sources" : ["some/source/path/somefile.txt"]
-	},
+	}
 ]
 ```
 
