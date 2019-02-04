@@ -21,12 +21,12 @@ Ex.
 ```json
 [
 	{
-		"dest" : "src/some/path"
+		"dest" : "src/some/path",
 		"sources" : ["some/source/path/*", "some/source/path/somefile.txt"]
 	},
 
 	{
-		"dest" : "src/some/other/path"
+		"dest" : "src/some/other/path",
 		"sources" : ["some/source/path/somefile.txt"]
 	},
 ]
@@ -37,7 +37,7 @@ Ex.
 ```json
 [
 	{
-		"dest" : "some/path"
+		"dest" : "some/path",
 		"repo" : "git@github.com:USERNAME/PACKAGE.git"
 	}
 ]
