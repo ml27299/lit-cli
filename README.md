@@ -10,9 +10,7 @@ The Lit CLI can be used to build modular applications using multiple git submodu
 
 ## Usage
 
-After install, run 
-	```
-	lit init
+After install, run "lit init"
 
 in the working directory of your project, this will create two files "lit.link.json" and "lit.module.json" as well as initialize any submodules in the working directory
 
