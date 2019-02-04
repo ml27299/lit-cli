@@ -44,4 +44,4 @@ Ex.
 ```
 
 
-Run lit init to install any new submodules
+Run "lit init" to install any new submodules
