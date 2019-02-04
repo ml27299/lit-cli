@@ -1,6 +1,6 @@
 # Lit CLI
 
-The Lit CLI can be used to build modular applications using multiple git submodules
+The Lit CLI can be used to build modular applications using multiple git submodules. This cli extends the git cli so that you can develop on applications that use hardlinking and git submodules as if your were working on a less complex project
 
 ## Install
 
@@ -8,9 +8,8 @@ The Lit CLI can be used to build modular applications using multiple git submodu
     ```
     curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash
 
-## Usage
-
-After install, run "lit init"
+## Init
+`lit init`
 
 in the working directory of your project, this will create two files "lit.link.json" and "lit.module.json" as well as initialize any submodules in the working directory
 
@@ -43,3 +42,14 @@ Ex.
 
 
 Run "lit init" to install any new submodules
+
+## Add
+`lit add`
+
+This command extends the `git add` command, but does it for all submodules and main application. All commands that work with `git add` work with `lit add`
+
+Ex. `lit add .`
+
+
+
+
