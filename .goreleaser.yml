@@ -1,28 +1,41 @@
-# This is an example goreleaser.yaml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
-before:
-  hooks:
-    # you may remove this if you don't use vgo
-    - go mod download
-    # you may remove this if you don't need go generate
-    - go generate ./...
+project_name: lit
+release:
+  github:
+    owner: ml27299
+    name: lit-cli
 builds:
-- env:
-  - CGO_ENABLED=0
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  - "386"
+  goarm:
+  - "6"
+  main: .
+  ldflags: -s -w -X github.com/ml27299/lit-cli/version.CurrVersion={{ .Version }} -X github.com/ml27299/lit-cli/version.CurrCommit={{ .Commit }}
+  binary: lit
+  ignore:
+    - goos: windows
+      goarch: amd64
 archive:
-  replacements:
-    darwin: Darwin
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
-checksum:
-  name_template: 'checksums.txt'
+  format: tar.gz
+  format_overrides:
+    - goos: windows
+      format: zip
+  name_template: '{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{
+    .Arm }}{{ end }}'
+  files:
+  - licence*
+  - LICENCE*
+  - license*
+  - LICENSE*
+  - readme*
+  - README*
+  - changelog*
+  - CHANGELOG*
 snapshot:
-  name_template: "{{ .Tag }}-next"
-changelog:
-  sort: asc
-  filters:
-    exclude:
-    - '^docs:'
-    - '^test:'
+  name_template: SNAPSHOT-{{ .Commit }}
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
