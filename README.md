@@ -62,7 +62,6 @@ If lit.link.json was configured to something like this
 		"dest" : "src/some/path",
 		"sources" : ["some/source/path/*"]
 	},
-	...
 ]
 ```
 
