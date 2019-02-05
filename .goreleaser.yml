@@ -1,4 +1,6 @@
 project_name: lit
+env_files:
+  github_token: ./.gittoken
 release:
   github:
     owner: ml27299
