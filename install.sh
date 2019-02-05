@@ -7,4 +7,4 @@ fi
 
 DOWNLOADER="https://raw.githubusercontent.com/ml27299/lit-cli/master/godownloader.sh";
 echo "yo";
-curl -sL -o- ${DOWNLOADER} | bash -s -- -b /usr/local/bin $TAG;
+eval "curl -sL -o- ${DOWNLOADER} | bash -s -- -b /usr/local/bin $TAG"
