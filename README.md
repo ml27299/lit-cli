@@ -52,7 +52,7 @@ Hard links files or file to a custom destination within the application (uses li
 `lit touch`
 
 Since you may be hard linking a whole folder to various parts of your application, it can be a pain if you had to add 
-a file to the source directory then relink. `lit touch` allows you to create a file anywhere in your application and will check if the directory that file is being placed in has any source linking directories, if it does, it will create the file in the source directory and link it to the intended path
+a file to the source directory then relink. `lit touch` allows you to create a file anywhere in your application and will check if the directory of that file is being placed in has any source linking directories, if it does, it will create the file in the source directory and link it to the intended path
 
 Ex. `lit touch ./src/some/path/newfile.txt`
 If lit.link.json was configured to something like this
