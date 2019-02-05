@@ -11,7 +11,6 @@ import (
 	"../helpers/prompt"
 	"path/filepath"
 	"strings"
-	"gopkg.in/src-d/go-git.v4"
 )
 
 var touchCmd = &cobra.Command{
@@ -21,31 +20,31 @@ var touchCmd = &cobra.Command{
 	Run: touchRun,
 }
 
-func CreateAndLink(submodule *git.Submodule, info parser.ParseInfo, args []string) error {
+func CreateAndLink(source string, items []parser.LinkItem, args []string) error {
 
 	_, newfilename := filepath.Split(args[0])
 	newfilepath, err := paths.Normalize(filepath.Dir(args[0]))
-	submodule_path := submodule.Config().Path
-	submodule_path, err = paths.Normalize(submodule_path)
+	source_path, err := paths.Normalize(filepath.Dir(source))
 
 	if err != nil {
 		return err
-	}
-	
-	matchedDestPaths, err := info.FindMatchingLinkItemsBySubmodule(submodule_path, newfilepath)
-	if err != nil {
-		return err
-	}
+	}	
 	
 	var index int
-	if len(matchedDestPaths) == 1 {
+	if len(items) == 1 {
 		index = 0
-	} else if len(matchedDestPaths) > 1 {
-		index, err = prompt.PromtForDest(matchedDestPaths, newfilename, newfilepath, submodule_path)
+	} else if len(items) > 1 {
+
+		var destPaths []string
+		for _, item := range items { 
+			destPaths = append(destPaths, item.Dest)
+		}
+
+		index, err = prompt.PromtForDest(destPaths, newfilename, newfilepath, source_path)
 		if err != nil {
 			return err
 		}
-	}else if len(matchedDestPaths) == 0 {
+	}else if len(items) == 0 {
 		_continue, err := prompt.PromptForNoDest(newfilename, newfilepath)
 		if !_continue {
 			return nil
@@ -59,13 +58,13 @@ func CreateAndLink(submodule *git.Submodule, info parser.ParseInfo, args []strin
 		return nil
 	}
 	
-	dest, err := paths.Normalize(matchedDestPaths[index])
+	dest, err := paths.Normalize(items[index].Dest)
 	if err != nil {
 		return err
 	}
 
 	newfilepath = strings.Replace(newfilepath, dest, "", -1)
-	newfilepath = submodule_path+newfilepath
+	newfilepath = source_path+newfilepath
 
 	_, err = os.Create(newfilepath+"/"+newfilename)
 	og_newfilepath, err := paths.Normalize(filepath.Dir(args[0]))
@@ -89,55 +88,44 @@ func touchRun(cmd *cobra.Command, args []string) {
 	_, newfilename := filepath.Split(args[0])
 	newfilepath, err := paths.Normalize(filepath.Dir(args[0]))
 	
-	dir, err := paths.FindRootDir()
-	CheckIfError(err)
-
-	submodules, err := GetSubmodules(dir)
-	CheckIfError(err)
-
 	info, err := parser.Config()
 	CheckIfError(err)
 	
 	items, err := info.FindMatchingLinkItems(newfilepath)
 	CheckIfError(err)
 	
-	var submodule_paths []string
+	var (
+		matched_sources []string
+		matched_items []parser.LinkItem
+	)
+
 	for _, item := range items {
-		paths := FindAssociateGitModulePaths(submodules, item.Sources...)
-		submodule_paths = parser.AppendUnique(submodule_paths, paths...)
-	}
-	
-	var matched_submodules []*git.Submodule
-	for _, submodule_path := range submodule_paths {
 
-		var _submodule *git.Submodule
-		for _, submodule := range submodules {
-			if submodule_path == submodule.Config().Path {
-				_submodule = submodule
-				break
-			}
-		}
-
-		if _submodule != nil {
-			matched_submodules = append(matched_submodules, _submodule)
+		sources, err := item.FindMatchingSources(newfilepath)
+		CheckIfError(err)
+		
+		matched_sources = parser.AppendUnique(matched_sources, sources...)
+		if len(sources) > 0 {
+			matched_items = append(matched_items, item)
 		}
 	}
 	
-	if len(matched_submodules) == 1 {
+	if len(matched_sources) == 0 && len(matched_items) == 0 {
 
-		err = CreateAndLink(matched_submodules[0], info, args)
-		CheckIfError(err)
-
-	} else if len(matched_submodules) > 1 {
-
-		index, err := prompt.PromptForSubmodule(matched_submodules, newfilename, newfilepath)
-		CheckIfError(err)
-
-		err = CreateAndLink(matched_submodules[index], info, args)
-		CheckIfError(err)
-
-	}else if len(matched_submodules) == 0 {
 		_, err = os.Create(args[0])
+		CheckIfError(err)
+
+	} else if len(matched_sources) == 1 {
+
+		err = CreateAndLink(matched_sources[0], matched_items, args)
+		CheckIfError(err)
+
+	} else if len(matched_sources) > 1 {
+
+		index, err := prompt.PromptForMultiSource(matched_sources, newfilename, newfilepath)
+		CheckIfError(err)
+
+		err = CreateAndLink(matched_sources[index], matched_items, args)
 		CheckIfError(err)
 	}
 }

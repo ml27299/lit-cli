@@ -24,7 +24,7 @@ func Config() (ParseInfo, error) {
 		file, err := os.Create(dir+"/lit.link.json")
 
 		defer file.Close()
-		
+
 		if err != nil {
 			return response, err
 		}
@@ -97,7 +97,11 @@ func AppendUnique(slice []string, i ...string) []string {
 		
 		return slice
 	}
-	
+		
+	if len(i) == 0 {
+		return slice
+	}
+
 	for _, ele := range slice {
         if ele == i[0] {
             return slice

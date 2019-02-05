@@ -2,27 +2,21 @@ package prompt
 import(
 	"github.com/chzyer/readline"
 	"fmt"
-	"gopkg.in/src-d/go-git.v4"
 	"strconv"
 	"strings"
 	"../paths"
 )
 
-func PromptForSubmodule(submodules []*git.Submodule, newfilename string, newfilepath string) (int, error) {
-	fmt.Println("There are multiple submodules in "+newfilepath)
-	fmt.Println("Choose which submodule to add "+newfilename)
+func PromptForMultiSource(sources []string, newfilename string, newfilepath string) (int, error) {
+	fmt.Println("There are multiple sources mapped to "+newfilepath)
+	fmt.Println("Choose which source to add "+newfilename)
 
 	var (
 		response string
-		paths []string
 	)
 
-	for _, submodule := range submodules {
-		paths = append(paths, submodule.Config().Path)
-	}
-
-	for index, path := range paths {
-		fmt.Println("["+strconv.Itoa(index)+"] "+path)
+	for index, source := range sources {
+		fmt.Println("["+strconv.Itoa(index)+"] "+source)
 	}
 
 	rl, err := readline.New("> ")
@@ -39,9 +33,9 @@ func PromptForSubmodule(submodules []*git.Submodule, newfilename string, newfile
 
 		index, err := strconv.Atoi(response)
 		if err != nil {
-			fmt.Println("Please enter a number for the corresponding submodule")
-		}else if index > len(submodules) - 1 {
-			fmt.Println("Please enter a number within range of the number of submodules")
+			fmt.Println("Please enter a number for the corresponding sources")
+		}else if index > len(sources) - 1 {
+			fmt.Println("Please enter a number within range of the number of sources")
 		} else {
 			break
 		}

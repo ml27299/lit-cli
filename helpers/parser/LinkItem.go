@@ -1,6 +1,7 @@
 package parser
 
 import(
+	//"fmt"
 	"os"
 	"strings"
 	"path/filepath"
@@ -11,6 +12,21 @@ type LinkItem struct {
 	Dest string
 	Sources []string
 }
+
+func (l *LinkItem) FindMatchingSources(path string) ([]string, error) {
+	
+	var response []string
+	for _, og_source := range l.Sources {
+		if !strings.Contains(og_source, "/*"){
+			continue
+		}
+
+		response = AppendUnique(response, og_source)
+	}
+
+	return response, nil
+}
+
 
 func (l *LinkItem) Expand() ([]Link, error) {
 	var response []Link
