@@ -105,11 +105,11 @@ func init() {
 	rebaseBoolArgIndexMap[23] = Args.BoolArg{ Long: "interactive", Short: "i" }
 	rebaseBoolArgIndexMap[24] = Args.BoolArg{ Long: "r", Short: "r" }
 	rebaseBoolArgIndexMap[25] = Args.BoolArg{ Long: "preserve-merges", Short: "p" }
-	rebaseBoolArgIndexMap[26] = Args.BoolArg{ Long: "root", Short: "p" }
-	rebaseBoolArgIndexMap[27] = Args.BoolArg{ Long: "autosquash", Short: "p" }
-	rebaseBoolArgIndexMap[28] = Args.BoolArg{ Long: "no-autosquash", Short: "p" }
-	rebaseBoolArgIndexMap[29] = Args.BoolArg{ Long: "autostash", Short: "p" }
-	rebaseBoolArgIndexMap[30] = Args.BoolArg{ Long: "no-autostash", Short: "p" }
+	rebaseBoolArgIndexMap[26] = Args.BoolArg{ Long: "root", Short: "" }
+	rebaseBoolArgIndexMap[27] = Args.BoolArg{ Long: "autosquash", Short: "" }
+	rebaseBoolArgIndexMap[28] = Args.BoolArg{ Long: "no-autosquash", Short: "" }
+	rebaseBoolArgIndexMap[29] = Args.BoolArg{ Long: "autostash", Short: "" }
+	rebaseBoolArgIndexMap[30] = Args.BoolArg{ Long: "no-autostash", Short: "" }
 	rebaseBoolArgIndexMap[31] = Args.BoolArg{ Long: "onto", Short: "" }
 
 	for index, val := range pushBoolArgIndexMap {
