@@ -1,13 +1,11 @@
 package cmd
 
 import (
-	//"fmt"
 	"os"
 	"io"
 	"github.com/spf13/cobra"
 	"../helpers/parser"
 	. "../helpers"
-	//"../helpers/parser/paths"
 	"path/filepath"
 )
 
@@ -65,7 +63,7 @@ func Link(link parser.Link) error {
 }
 
 func linkRun(cmd *cobra.Command, args []string) {
-	
+
 	info, err  := parser.Config()
 	CheckIfError(err)
 

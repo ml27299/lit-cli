@@ -1,11 +1,7 @@
 package cmd
 
 import (
-	//"fmt"
-	//"errors"
-	//"strings"
 	"os"
-	//"os/exec"
 	"github.com/spf13/cobra"
 	"../helpers/parser"
 	. "../helpers"

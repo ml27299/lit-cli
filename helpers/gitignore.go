@@ -1,15 +1,16 @@
 package helpers
 
 import (
-	//"os/user"
+	"strings"
 	"bufio"
 	"io"
 	"io/ioutil"
 	"os"
 	"./resources"
+	"./parser"
 )
 
-func UpdateGitignore(path string, links []string) error {
+func UpdateGitignore(path string, links []parser.Link) error {
 
 	if _, err := os.Stat(path+"/.gitignore"); os.IsNotExist(err) {
 
@@ -32,7 +33,12 @@ func UpdateGitignore(path string, links []string) error {
 		return err
 	}
 
-	err = generateContent(path+"/.gitignore", links)
+	var link_dests []string
+	for _, link := range links {
+		link_dests = append(link_dests, strings.Replace(link.Dest, path, "", -1))
+	}
+
+	err = generateContent(path+"/.gitignore", link_dests)
 	if err != nil {
 		return err
 	}

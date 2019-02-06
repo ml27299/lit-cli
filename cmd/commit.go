@@ -1,27 +1,47 @@
 package cmd
 
 import (
-	"time"
-	"gopkg.in/src-d/go-git.v4"
 	"github.com/spf13/cobra"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	. "../helpers"
 	"../helpers/paths"
+	"../helpers/bash"
+	"../helpers/parser"
+	Args "../helpers/args"
 )
 
 var (
-	message string
-	all bool
-
-	commitCmd = &cobra.Command{
-		Use:   "commit",
-		Short: "commit files to git repo, analogous to \"git commit\"",
-		Long: `ex. lit commit -am "my commit message"`,
-		Run: commitRun,
-	}
+	commitSlug = "git-commit"
+	commitStringArgs [12]string
+	commitBoolArgs [24]bool
+	commitStringArgIndexMap = make(map[int]Args.StringArg)
+	commitBoolArgIndexMap = make(map[int]Args.BoolArg)
 )
 
+var commitCmd = &cobra.Command{
+	Use:   "commit",
+	Short:  DocRoot+"/"+commitSlug,
+	Long: `ex. lit commit -am "my commit message"`,
+	Run: commitRun,
+}
+
 func commitRun(cmd *cobra.Command, args []string) {
+
+	var (
+		_commitStringArgs []Args.StringArg
+		_commitBoolArgs []Args.BoolArg
+	)
+
+	for index, arg := range commitBoolArgIndexMap {
+		arg.SetValue(commitBoolArgs[index])
+		_commitBoolArgs = append(_commitBoolArgs, arg)
+	}
+	for index, arg := range commitStringArgIndexMap {
+		arg.SetValue(commitStringArgs[index])
+		_commitStringArgs = append(_commitStringArgs, arg)
+	}
+
+	_args := Args.GenerateCommand(_commitStringArgs, _commitBoolArgs)
+	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
@@ -29,7 +49,10 @@ func commitRun(cmd *cobra.Command, args []string) {
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
-	links, err := FindHardLinkedFilePaths()
+	info, err  := parser.Config()
+	CheckIfError(err)
+
+	links, err := info.GetLinks()
 	CheckIfError(err)
 
 	err = UpdateGitignore(dir, links)
@@ -41,39 +64,62 @@ func commitRun(cmd *cobra.Command, args []string) {
 		CheckIfError(err)
 		Info("Entering "+*&status.Path+"...")
 
-		worktree, err := GetSubmoduleWorkTree(submodules[i])
-		CheckIfError(err)
-
-		
-		_, err = worktree.Commit(message, &git.CommitOptions{
-			All: all,
-			Author: &object.Signature{
-				When: time.Now(),
-			},
-		})
+		err = bash.Commit(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
 	Info("Entering /...")
-	repo, err := git.PlainOpen(dir)
-	CheckIfError(err)
-
-	worktree, err := repo.Worktree()
-	CheckIfError(err)
-
-	_, err = worktree.Commit(message, &git.CommitOptions{
-		All: all,
-		Author: &object.Signature{
-			When: time.Now(),
-		},
-	})
+	err = bash.Commit(dir, args)
 	CheckIfError(err)
 }
 
 func init() {
 	rootCmd.AddCommand(commitCmd)
 
-	commitCmd.PersistentFlags().String("foo", "", "A help for foo")
-	commitCmd.Flags().BoolVarP(&all, "all", "a", false, "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.")
-	commitCmd.Flags().StringVarP(&message, "message", "m", "", "The message for the commit")
+	commitStringArgIndexMap[0] = Args.StringArg{ Long: "message", Short: "m" } 
+	commitStringArgIndexMap[1] = Args.StringArg{ Long: "reuse-message", Short: "C" } 
+	commitStringArgIndexMap[2] = Args.StringArg{ Long: "reedit-message", Short: "c" } 
+	commitStringArgIndexMap[3] = Args.StringArg{ Long: "fixup", Short: "" } 
+	commitStringArgIndexMap[4] = Args.StringArg{ Long: "squash", Short: "" } 
+	commitStringArgIndexMap[5] = Args.StringArg{ Long: "file", Short: "" } 
+	commitStringArgIndexMap[6] = Args.StringArg{ Long: "author", Short: "" } 
+	commitStringArgIndexMap[7] = Args.StringArg{ Long: "date", Short: "" } 
+	commitStringArgIndexMap[8] = Args.StringArg{ Long: "template", Short: "t" } 
+	commitStringArgIndexMap[9] = Args.StringArg{ Long: "cleanup", Short: "" } 
+	commitStringArgIndexMap[10] = Args.StringArg{ Long: "untracked-files", Short: "u" } 
+	commitStringArgIndexMap[11] = Args.StringArg{ Long: "gpg-sign", Short: "S" } 
+
+	
+	for index, val := range commitStringArgIndexMap {
+		commitCmd.Flags().StringVarP(&commitStringArgs[index], val.Long, val.Short, "",  DocRoot+"/"+commitSlug+"#"+commitSlug+"-"+val.Long)
+	}
+
+	commitBoolArgIndexMap[0] = Args.BoolArg{ Long: "all", Short: "a" } 
+	commitBoolArgIndexMap[1] = Args.BoolArg{ Long: "patch", Short: "p" } 
+	commitBoolArgIndexMap[2] = Args.BoolArg{ Long: "reset-author", Short: "" } 
+	commitBoolArgIndexMap[3] = Args.BoolArg{ Long: "short", Short: "" } 
+	commitBoolArgIndexMap[4] = Args.BoolArg{ Long: "branch", Short: "" } 
+	commitBoolArgIndexMap[5] = Args.BoolArg{ Long: "porcelain", Short: "" } 
+	commitBoolArgIndexMap[6] = Args.BoolArg{ Long: "long", Short: "" } 
+	commitBoolArgIndexMap[7] = Args.BoolArg{ Long: "null", Short: "z" } 
+	commitBoolArgIndexMap[8] = Args.BoolArg{ Long: "signoff", Short: "s" } 
+	commitBoolArgIndexMap[9] = Args.BoolArg{ Long: "no-verify", Short: "n" } 
+	commitBoolArgIndexMap[10] = Args.BoolArg{ Long: "allow-empty", Short: "" } 
+	commitBoolArgIndexMap[11] = Args.BoolArg{ Long: "allow-empty-message", Short: "" } 
+	commitBoolArgIndexMap[12] = Args.BoolArg{ Long: "edit", Short: "e" } 
+	commitBoolArgIndexMap[13] = Args.BoolArg{ Long: "no-edit", Short: "" } 
+	commitBoolArgIndexMap[14] = Args.BoolArg{ Long: "amend", Short: "" } 
+	commitBoolArgIndexMap[15] = Args.BoolArg{ Long: "no-post-rewrite", Short: "" } 
+	commitBoolArgIndexMap[16] = Args.BoolArg{ Long: "include", Short: "i" } 
+	commitBoolArgIndexMap[17] = Args.BoolArg{ Long: "only", Short: "o" } 
+	commitBoolArgIndexMap[18] = Args.BoolArg{ Long: "verbose", Short: "v" } 
+	commitBoolArgIndexMap[19] = Args.BoolArg{ Long: "quiet", Short: "q" } 
+	commitBoolArgIndexMap[20] = Args.BoolArg{ Long: "dry-run", Short: "" } 
+	commitBoolArgIndexMap[21] = Args.BoolArg{ Long: "status", Short: "" } 
+	commitBoolArgIndexMap[22] = Args.BoolArg{ Long: "no-status", Short: "" }
+	commitBoolArgIndexMap[23] = Args.BoolArg{ Long: "no-gpg-sign", Short: "" } 
+	
+	for index, val := range commitBoolArgIndexMap {
+		commitCmd.Flags().BoolVarP(&commitBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+commitSlug+"#"+commitSlug+"-"+val.Long)
+	}
 }

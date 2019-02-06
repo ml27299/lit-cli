@@ -4,7 +4,7 @@ import (
 	"os/exec"
 )
 
-func Pull(path string, args []string) error {	
+func Checkout(path string, args []string) error {	
 	current_path, err := os.Getwd()
 	err = os.Chdir(path)
 
@@ -12,7 +12,7 @@ func Pull(path string, args []string) error {
         return err
     }
 
-    args = append([]string{"pull"}, args...)
+    args = append([]string{"checkout"}, args...)
     cmd := exec.Command("git", args...)
 
     cmd.Stdout = os.Stdout

@@ -1,6 +1,5 @@
 package bash
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -14,13 +13,14 @@ func Merge(path string, args []string) error {
     }
 
     args = append([]string{"merge"}, args...)
-	out, err := exec.Command("git", args...).Output()
-	if err != nil {
-		return err
-	}
+    cmd := exec.Command("git", args...)
 
-	if string(out[:]) == "Already up to date" {
-		fmt.Printf("%s\n", out)
+    cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil && err.Error() != "exit status 1" {
+		return err
 	}
 
 	err = os.Chdir(current_path)

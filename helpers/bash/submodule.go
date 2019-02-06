@@ -1,18 +1,18 @@
 package bash
 import (
-	"fmt"
-	//"os"
+	"os"
 	"os/exec"
 )
 
 func SubmoduleAdd(repo, dest string) error {
-	out, err := exec.Command("git", "submodule", "add", repo, dest).Output()
-	if err != nil {
-        return err
-    }
 
-	if string(out[:]) != "" {
-		fmt.Printf("%s\n", out)
+	cmd := exec.Command("git", "submodule", "add", repo, dest)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil && err.Error() != "exit status 1" {
+		return err
 	}
 
 	return nil
