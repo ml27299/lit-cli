@@ -43,7 +43,11 @@ func GenerateCommand(stringArgs []StringArg, boolArgs []BoolArg) []string {
 
 	for _, arg := range boolArgs {
 		if arg.Value {
-			response = append(response, "--"+arg.Long)
+			if len(arg.Long) > 1 {
+				response = append(response, "--"+arg.Long)
+			}else {
+				response = append(response, "-"+arg.Short)
+			}
 		}
 	}
 
