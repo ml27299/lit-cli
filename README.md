@@ -70,42 +70,49 @@ then newfile.txt will be created in "some/source/path" and hard linked to "./src
 
 
 ## Add
-`lit add`
+`lit add --help`
 
 This command extends the `git add` command, but does it for all submodules and main application. All commands that work with `git add` work with `lit add`
 
 Ex. `lit add .`
 
 ## Commit
-`lit commit`
+`lit commit --help`
 
 This command extends the `git commit` command, but does it for all submodules and main application. All commands that work with `git commit` work with `lit commit`
 
 Ex. `lit commit -am "My first commit!"`
 
 ## Pull
-`lit pull`
+`lit pull --help`
 
 This command extends the `git pull` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit pull`
 
 Ex. `lit pull origin master`
 
 ## Push
-`lit push`
+`lit push --help`
 
 This command extends the `git push` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit push`
 
 Ex. `lit push origin master`
 
 ## Merge
-`lit merge`
+`lit merge --help`
 
 This command extends the `git merge` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit merge`
 
 Ex. `lit merge dev`
 
+## Rebase
+`lit rebase --help`
+
+This command extends the `git rebase` command, but does it for all submodules and main application. All commands that work with `git rebase` work with `lit merge`
+
+Ex. `lit merge dev`
+
 ## Checkout
-`lit push`
+`lit checkout --help`
 
 This command extends the `git checkout` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit chckout`
 
