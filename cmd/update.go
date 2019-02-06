@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
 	"os/exec"
 	"github.com/spf13/cobra"
 	. "../helpers"
@@ -15,16 +15,23 @@ var updateCmd = &cobra.Command{
 }
 
 func updateRun(cmd *cobra.Command, args []string) {
-	out, err := exec.Command("/bin/bash", "-c", "curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh").Output()
+	
+	install_script_path := "https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh"
+	args = append([]string{"checkout"}, args...)
+   
+	out, err := exec.Command("/bin/bash", "-c", "curl "+install_script_path).Output()
 	CheckIfError(err)
-
-	//fmt.Printf("%s\n", out)
 
 	out_str := string(out[:])
-	out, err = exec.Command("/bin/bash", "-c", out_str).Output()
-	CheckIfError(err)
+	updatecmd := exec.Command("/bin/bash", "-c", out_str)
 
-	fmt.Printf("%s\n", out)
+    updatecmd.Stdout = os.Stdout
+	updatecmd.Stderr = os.Stderr
+
+	err = updatecmd.Run()
+	if err != nil && err.Error() != "exit status 1" {
+		CheckIfError(err)
+	}
 }
 
 func init() {
