@@ -25,21 +25,14 @@ var checkoutCmd = &cobra.Command{
 
 func checkoutRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_checkoutStringArgs []Args.StringArg
-		_checkoutBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range checkoutBoolArgIndexMap {
 		arg.SetValue(checkoutBoolArgs[index])
-		_checkoutBoolArgs = append(_checkoutBoolArgs, arg)
 	}
 	for index, arg := range checkoutStringArgIndexMap {
 		arg.SetValue(checkoutStringArgs[index])
-		_checkoutStringArgs = append(_checkoutStringArgs, arg)
 	}
 
-	_args := Args.GenerateCommand(_checkoutStringArgs, _checkoutBoolArgs)
+	_args := Args.GenerateCommand(checkoutStringArgIndexMap, checkoutBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()

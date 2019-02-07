@@ -25,21 +25,14 @@ var rebaseCmd = &cobra.Command{
 
 func rebaseRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_rebaseStringArgs []Args.StringArg
-		_rebaseBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range rebaseBoolArgIndexMap {
 		arg.SetValue(rebaseBoolArgs[index])
-		_rebaseBoolArgs = append(_rebaseBoolArgs, arg)
 	}
 	for index, arg := range rebaseStringArgIndexMap {
 		arg.SetValue(rebaseStringArgs[index])
-		_rebaseStringArgs = append(_rebaseStringArgs, arg)
 	}
 
-	_args := Args.GenerateCommand(_rebaseStringArgs, _rebaseBoolArgs)
+	_args := Args.GenerateCommand(rebaseStringArgIndexMap, rebaseBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()

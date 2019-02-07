@@ -26,21 +26,14 @@ var mergeCmd = &cobra.Command{
 
 func mergeRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_mergeStringArgs []Args.StringArg
-		_mergeBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range mergeBoolArgIndexMap {
 		arg.SetValue(mergeBoolArgs[index])
-		_mergeBoolArgs = append(_mergeBoolArgs, arg)
 	}
 	for index, arg := range mergeStringArgIndexMap {
 		arg.SetValue(mergeStringArgs[index])
-		_mergeStringArgs = append(_mergeStringArgs, arg)
-	}
+	}	
 
-	_args := Args.GenerateCommand(_mergeStringArgs, _mergeBoolArgs)
+	_args := Args.GenerateCommand(mergeStringArgIndexMap, mergeBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()

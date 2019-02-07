@@ -21,7 +21,7 @@ func (a *BoolArg) SetValue(value bool) {
 	a.Value = value
 }
 
-func GenerateCommand(stringArgs []StringArg, boolArgs []BoolArg) []string {
+func GenerateCommand(stringArgs map[int]StringArg, boolArgs  map[int]BoolArg) []string {
 	
 	var response []string
 

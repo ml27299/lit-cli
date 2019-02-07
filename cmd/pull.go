@@ -26,21 +26,14 @@ var pullCmd = &cobra.Command{
 
 func pullRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_pullStringArgs []Args.StringArg
-		_pullBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range pullBoolArgIndexMap {
 		arg.SetValue(pullBoolArgs[index])
-		_pullBoolArgs = append(_pullBoolArgs, arg)
 	}
 	for index, arg := range pullStringArgIndexMap {
 		arg.SetValue(pullStringArgs[index])
-		_pullStringArgs = append(_pullStringArgs, arg)
 	}
 
-	_args := Args.GenerateCommand(_pullStringArgs, _pullBoolArgs)
+	_args := Args.GenerateCommand(pullStringArgIndexMap, pullBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()

@@ -26,21 +26,14 @@ var addCmd = &cobra.Command{
 
 func addRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_addStringArgs []Args.StringArg
-		_addBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range addBoolArgIndexMap {
 		arg.SetValue(addBoolArgs[index])
-		_addBoolArgs = append(_addBoolArgs, arg)
 	}
 	for index, arg := range addStringArgIndexMap {
 		arg.SetValue(addStringArgs[index])
-		_addStringArgs = append(_addStringArgs, arg)
 	}
 
-	_args := Args.GenerateCommand(_addStringArgs, _addBoolArgs)
+	_args := Args.GenerateCommand(addStringArgIndexMap, addBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()

@@ -26,21 +26,14 @@ var commitCmd = &cobra.Command{
 
 func commitRun(cmd *cobra.Command, args []string) {
 
-	var (
-		_commitStringArgs []Args.StringArg
-		_commitBoolArgs []Args.BoolArg
-	)
-
 	for index, arg := range commitBoolArgIndexMap {
 		arg.SetValue(commitBoolArgs[index])
-		_commitBoolArgs = append(_commitBoolArgs, arg)
 	}
 	for index, arg := range commitStringArgIndexMap {
 		arg.SetValue(commitStringArgs[index])
-		_commitStringArgs = append(_commitStringArgs, arg)
 	}
 
-	_args := Args.GenerateCommand(_commitStringArgs, _commitBoolArgs)
+	_args := Args.GenerateCommand(commitStringArgIndexMap, commitBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()
