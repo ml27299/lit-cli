@@ -43,17 +43,24 @@ func mergeRun(cmd *cobra.Command, args []string) {
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
+	if submodule != "" {
+		
+		_submodule, err := FindSubmodule(submodules, submodule)
+		CheckIfError(err)
+
+		status, err := _submodule.Status()
+		CheckIfError(err)
+
+		err = bash.Merge(dir+"/"+*&status.Path, args)
+		CheckIfError(err)
+
+		return 
+	}
+
 	for i := 0; i < len(submodules); i++ {
 
 		status, err := submodules[i].Status()
 		CheckIfError(err)
-
-		if submodule != "" && status.Path == submodule {
-			err = bash.Merge(dir+"/"+*&status.Path, args)
-			CheckIfError(err)
-
-			break
-		}
 
 		if interactive {
 			command, err := prompt.PromptForInteractive(args, submodules[i])
@@ -70,11 +77,9 @@ func mergeRun(cmd *cobra.Command, args []string) {
     	CheckIfError(err)
 	}
 
-	if submodule == "" {
-		Info("Entering /...")
-		err = bash.Merge(dir+"/", args)
-		CheckIfError(err)
-	}
+	Info("Entering /...")
+	err = bash.Merge(dir+"/", args)
+	CheckIfError(err)
 }
 
 func init() {
