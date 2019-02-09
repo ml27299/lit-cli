@@ -39,7 +39,7 @@ func MergeViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git merge "+args)
+    cmd := exec.Command("sh", "-c", "git merge "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

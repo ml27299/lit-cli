@@ -39,7 +39,7 @@ func CommitViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git commit "+args)
+    cmd := exec.Command("sh", "-c", "git commit "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

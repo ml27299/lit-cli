@@ -39,7 +39,7 @@ func PullViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git pull "+args)
+    cmd := exec.Command("sh", "-c", "git pull "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

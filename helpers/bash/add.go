@@ -39,7 +39,7 @@ func AddViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git add "+args)
+    cmd := exec.Command("sh", "-c", "git add "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

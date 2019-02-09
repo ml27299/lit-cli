@@ -39,7 +39,7 @@ func CheckoutViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git checkout "+args)
+    cmd := exec.Command("sh", "-c", "git checkout "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

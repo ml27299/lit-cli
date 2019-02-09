@@ -39,7 +39,7 @@ func RebaseViaBash(path string, args string) error {
         return err
     }
 
-    cmd := exec.Command("/bin/bash", "-c", "git rebase "+args)
+    cmd := exec.Command("sh", "-c", "git rebase "+args)
 
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
