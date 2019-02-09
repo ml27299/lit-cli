@@ -7,6 +7,7 @@ import (
 	"../helpers/bash"
 	"../helpers/parser"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -25,12 +26,12 @@ var addCmd = &cobra.Command{
 }
 
 func addRun(cmd *cobra.Command, args []string) {
-
+	
 	for index, arg := range addBoolArgIndexMap {
-		arg.SetValue(addBoolArgs[index])
+		addBoolArgIndexMap[index] = arg.SetValue(addBoolArgs[index])
 	}
 	for index, arg := range addStringArgIndexMap {
-		arg.SetValue(addStringArgs[index])
+		addStringArgIndexMap[index] = arg.SetValue(addStringArgs[index])
 	}
 
 	_args := Args.GenerateCommand(addStringArgIndexMap, addBoolArgIndexMap)
@@ -55,13 +56,35 @@ func addRun(cmd *cobra.Command, args []string) {
 		status, err := submodules[i].Status()
 		CheckIfError(err)
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Add(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.AddViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
 		err = bash.Add(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
-	err = bash.Add(dir, args)
-	CheckIfError(err)
+	if submodule == "" {
+		err = bash.Add(dir, args)
+		CheckIfError(err)
+	}
 }
+
+
+
 
 func init() {
 	rootCmd.AddCommand(addCmd)

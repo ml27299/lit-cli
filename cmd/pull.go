@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -27,10 +28,10 @@ var pullCmd = &cobra.Command{
 func pullRun(cmd *cobra.Command, args []string) {
 
 	for index, arg := range pullBoolArgIndexMap {
-		arg.SetValue(pullBoolArgs[index])
+		pullBoolArgIndexMap[index] = arg.SetValue(pullBoolArgs[index])
 	}
 	for index, arg := range pullStringArgIndexMap {
-		arg.SetValue(pullStringArgs[index])
+		pullStringArgIndexMap[index] = arg.SetValue(pullStringArgs[index])
 	}
 
 	_args := Args.GenerateCommand(pullStringArgIndexMap, pullBoolArgIndexMap)
@@ -46,15 +47,34 @@ func pullRun(cmd *cobra.Command, args []string) {
 
 		status, err := submodules[i].Status()
 		CheckIfError(err)
-		Info("Entering "+*&status.Path+"...")
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Pull(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.PullViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Pull(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
-	Info("Entering /...")
-	err = bash.Pull(dir+"/", args)
-	CheckIfError(err)
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Pull(dir+"/", args)
+		CheckIfError(err)
+	}
 }
 
 func init() {

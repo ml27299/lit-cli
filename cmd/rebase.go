@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -26,10 +27,10 @@ var rebaseCmd = &cobra.Command{
 func rebaseRun(cmd *cobra.Command, args []string) {
 
 	for index, arg := range rebaseBoolArgIndexMap {
-		arg.SetValue(rebaseBoolArgs[index])
+		rebaseBoolArgIndexMap[index] = arg.SetValue(rebaseBoolArgs[index])
 	}
 	for index, arg := range rebaseStringArgIndexMap {
-		arg.SetValue(rebaseStringArgs[index])
+		rebaseStringArgIndexMap[index] = arg.SetValue(rebaseStringArgs[index])
 	}
 
 	_args := Args.GenerateCommand(rebaseStringArgIndexMap, rebaseBoolArgIndexMap)
@@ -45,15 +46,34 @@ func rebaseRun(cmd *cobra.Command, args []string) {
 
 		status, err := submodules[i].Status()
 		CheckIfError(err)
-		Info("Entering "+*&status.Path+"...")
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Rebase(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.RebaseViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Rebase(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
-	Info("Entering /...")
-	err = bash.Rebase(dir, args)
-	CheckIfError(err)
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Rebase(dir, args)
+		CheckIfError(err)
+	}
 }
 
 func init() {

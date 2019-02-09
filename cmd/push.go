@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -26,10 +27,10 @@ var pushCmd = &cobra.Command{
 func pushRun(cmd *cobra.Command, args []string) {
 
 	for index, arg := range pushBoolArgIndexMap {
-		arg.SetValue(pushBoolArgs[index])
+		pushBoolArgIndexMap[index] = arg.SetValue(pushBoolArgs[index])
 	}
 	for index, arg := range pushStringArgIndexMap {
-		arg.SetValue(pushStringArgs[index])
+		pushStringArgIndexMap[index] = arg.SetValue(pushStringArgs[index])
 	}
 
 	_args := Args.GenerateCommand(pushStringArgIndexMap, pushBoolArgIndexMap)
@@ -44,16 +45,35 @@ func pushRun(cmd *cobra.Command, args []string) {
 	for i := 0; i < len(submodules); i++ {
 
 		status, err := submodules[i].Status()
-		CheckIfError(err)
-		Info("Entering "+*&status.Path+"...")
+		CheckIfError(err)	
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Push(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.PushViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Push(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
-	Info("Entering /...")
-	err = bash.Push(dir, args)
-	CheckIfError(err)
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Push(dir, args)
+		CheckIfError(err)
+	}
 }
 
 func init() {

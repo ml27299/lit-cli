@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -45,15 +46,34 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 
 		status, err := submodules[i].Status()
 		CheckIfError(err)
-		Info("Entering "+*&status.Path+"...")
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Checkout(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.CheckoutViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Checkout(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
-	Info("Entering /...")
-	err = bash.Checkout(dir, args)
-	CheckIfError(err)
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Checkout(dir, args)
+		CheckIfError(err)
+	}
 }
 
 func init() {

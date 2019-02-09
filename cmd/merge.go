@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -27,10 +28,10 @@ var mergeCmd = &cobra.Command{
 func mergeRun(cmd *cobra.Command, args []string) {
 
 	for index, arg := range mergeBoolArgIndexMap {
-		arg.SetValue(mergeBoolArgs[index])
+		mergeBoolArgIndexMap[index] = arg.SetValue(mergeBoolArgs[index])
 	}
 	for index, arg := range mergeStringArgIndexMap {
-		arg.SetValue(mergeStringArgs[index])
+		mergeStringArgIndexMap[index] = arg.SetValue(mergeStringArgs[index])
 	}	
 
 	_args := Args.GenerateCommand(mergeStringArgIndexMap, mergeBoolArgIndexMap)
@@ -47,16 +48,33 @@ func mergeRun(cmd *cobra.Command, args []string) {
 		status, err := submodules[i].Status()
 		CheckIfError(err)
 
-		Info("Entering "+*&status.Path+"...")
+		if submodule != "" && status.Path == submodule {
+			err = bash.Merge(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
 
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.MergeViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Merge(dir+"/"+*&status.Path, args)
     	CheckIfError(err)
 	}
 
-	Info("Entering /...")
-
-	err = bash.Merge(dir+"/", args)
-	CheckIfError(err)
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Merge(dir+"/", args)
+		CheckIfError(err)
+	}
 }
 
 func init() {

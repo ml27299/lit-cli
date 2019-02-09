@@ -3,9 +3,45 @@ import(
 	"github.com/chzyer/readline"
 	"fmt"
 	"strconv"
+	. "../../helpers"
 	"strings"
 	"../paths"
+	"gopkg.in/src-d/go-git.v4"
 )
+
+func PromptForInteractive(args []string, submodule *git.Submodule) (string, error) {
+	var response string
+	status, err := submodule.Status()
+
+	if err != nil {
+		return response, err
+	}
+
+	Info("Interactive mode for "+*&status.Path)
+	Info("Below is the command that will be supplied to "+*&status.Path+", edit if not correct")
+
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt: "> ",
+		ForceUseInteractive: true,
+		UniqueEditLine: true,
+	})
+	rl.WriteStdin([]byte(strings.Join(args, " ")))
+	if err != nil {
+		panic(err)
+	}
+	defer rl.Close()
+
+	for {
+		response, err = rl.Readline()
+		if err != nil {
+			break
+		}
+
+		break
+	}
+	
+	return response, nil
+}
 
 func PromptForMultiSource(sources []string, newfilename string, newfilepath string) (int, error) {
 	fmt.Println("There are multiple sources mapped to "+newfilepath)

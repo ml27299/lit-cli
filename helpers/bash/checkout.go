@@ -30,3 +30,29 @@ func Checkout(path string, args []string) error {
 
 	return nil
 }
+
+func CheckoutViaBash(path string, args string) error {	
+	current_path, err := os.Getwd()
+	err = os.Chdir(path)
+
+	if err != nil {
+        return err
+    }
+
+    cmd := exec.Command("/bin/bash", "-c", "git checkout "+args)
+
+    cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil && err.Error() != "exit status 1" {
+		return err
+	}
+
+	err = os.Chdir(current_path)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -13,12 +13,21 @@ type BoolArg struct {
 	Value bool
 }
 
-func (a *StringArg) SetValue(value string) {
-	a.Value = value
+func (old *StringArg) SetValue(value string) StringArg {
+	return StringArg{
+		Short: old.Short,
+		Long: old.Long,
+		NoEqual: old.NoEqual,
+		Value: value,
+	}
 }
 
-func (a *BoolArg) SetValue(value bool) {
-	a.Value = value
+func (old *BoolArg) SetValue(value bool) BoolArg {
+	return BoolArg{
+		Short: old.Short,
+		Long: old.Long,
+		Value: value,
+	}
 }
 
 func GenerateCommand(stringArgs map[int]StringArg, boolArgs  map[int]BoolArg) []string {

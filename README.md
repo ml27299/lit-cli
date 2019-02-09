@@ -8,12 +8,16 @@ The lit cli can be used to build modular applications utilizing an architecture 
     ```
     curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash
 
-## Init
+
+## Usage
+`lit --help`
+
+### Init
 `lit init`
 
 in the working directory of your project, this will create "lit.link.json", "lit.module.json" and ".gitignore", if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file)
 
-### lit.link.json
+#### lit.link.json
 Ex.
 ```json
 [
@@ -29,7 +33,7 @@ Ex.
 ]
 ```
 
-### lit.module.json
+#### lit.module.json
 Ex.
 ```json
 [
@@ -43,12 +47,41 @@ Ex.
 
 Run `lit init` to install any new submodules
 
-## Link
+### Interactive mode
+`lit --inter [command] [options]`
+
+The Interactive mode is useful when different options need to be passed depending on the submodule
+Ex.
+
+`lit commt -am "update something"` - this will send the message "update something" to all submodules and the main application
+
+Sometimes you want to put different messages for different submodules, to accomplish this in lit run 
+
+`lit --inter commit -am "update something"` - this will stop at every submodule and pop a prompt like
+
+`
+Interactive mode for $SUBMODULE_PATH
+Below is the command that will be supplied to $SUBMODULE_PATH, edit if not correct
+> --message="upadate something" --all
+`
+
+Here you can edit the message
+`> --message="upadate another something" --all`
+
+This new command will be used for the particular submodule
+
+### Specific submoldule
+In lit you can throw any command to just one submodule using the `--submodule` flag
+Ex.
+
+lit --submodule $SUBMODULE_PATH commit -am "update"
+
+### Link
 `lit link`
 
 Hard links files or file to a custom destination within the application (uses lit.link.json)
 
-## Touch
+### Touch
 `lit touch`
 
 Since you may be hard linking a whole folder to various parts of your application, it can be a pain if you had to add 
@@ -69,49 +102,49 @@ If lit.link.json was configured to something like this
 then newfile.txt will be created in "some/source/path" and hard linked to "./src/some/path"
 
 
-## Add
+### Add
 `lit add --help`
 
 This command extends the `git add` command, but does it for all submodules and main application. All commands that work with `git add` work with `lit add`
 
 Ex. `lit add .`
 
-## Commit
+### Commit
 `lit commit --help`
 
 This command extends the `git commit` command, but does it for all submodules and main application. All commands that work with `git commit` work with `lit commit`
 
 Ex. `lit commit -am "My first commit!"`
 
-## Pull
+### Pull
 `lit pull --help`
 
 This command extends the `git pull` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit pull`
 
 Ex. `lit pull origin master`
 
-## Push
+### Push
 `lit push --help`
 
 This command extends the `git push` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit push`
 
 Ex. `lit push origin master`
 
-## Merge
+### Merge
 `lit merge --help`
 
 This command extends the `git merge` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit merge`
 
 Ex. `lit merge dev`
 
-## Rebase
+### Rebase
 `lit rebase --help`
 
 This command extends the `git rebase` command, but does it for all submodules and main application. All commands that work with `git rebase` work with `lit merge`
 
 Ex. `lit merge dev`
 
-## Checkout
+### Checkout
 `lit checkout --help`
 
 This command extends the `git checkout` command, but does it for all submodules and main application. All commands that work with `git pull` work with `lit chckout`

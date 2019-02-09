@@ -7,6 +7,7 @@ import (
 	"../helpers/bash"
 	"../helpers/parser"
 	Args "../helpers/args"
+	"../helpers/prompt"
 )
 
 var (
@@ -27,10 +28,10 @@ var commitCmd = &cobra.Command{
 func commitRun(cmd *cobra.Command, args []string) {
 
 	for index, arg := range commitBoolArgIndexMap {
-		arg.SetValue(commitBoolArgs[index])
+		commitBoolArgIndexMap[index] = arg.SetValue(commitBoolArgs[index])
 	}
 	for index, arg := range commitStringArgIndexMap {
-		arg.SetValue(commitStringArgs[index])
+		commitStringArgIndexMap[index] = arg.SetValue(commitStringArgs[index])
 	}
 
 	_args := Args.GenerateCommand(commitStringArgIndexMap, commitBoolArgIndexMap)
@@ -55,15 +56,34 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 		status, err := submodules[i].Status()
 		CheckIfError(err)
-		Info("Entering "+*&status.Path+"...")
 
+		if submodule != "" && status.Path == submodule {
+			err = bash.Commit(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+
+			break
+		}
+
+		if interactive {
+			command, err := prompt.PromptForInteractive(args, submodules[i])
+			CheckIfError(err)
+
+			err = bash.CommitViaBash(dir+"/"+*&status.Path, command)
+			CheckIfError(err)
+
+			continue
+		}
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Commit(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
-
-	Info("Entering /...")
-	err = bash.Commit(dir, args)
-	CheckIfError(err)
+	
+	if submodule == "" {
+		Info("Entering /...")
+		err = bash.Commit(dir, args)
+		CheckIfError(err)
+	}
 }
 
 func init() {
