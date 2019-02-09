@@ -49,6 +49,10 @@ Run `lit init` to install any new submodules
 
 ### Interactive mode
 `lit --inter [command] [options]`
+or
+`lit [command] [options] --inter`
+or 
+`lit [command] --inter [options]`
 
 The Interactive mode is useful when different options need to be passed depending on the submodule
 Ex.
@@ -69,6 +73,12 @@ Here you can edit the message
 `> --message="update another something" --all`
 
 ### Specific submoldule
+`lit --submodule $SUBMODULE_PATH [command] [options]`
+or
+`lit [command] [options] --submodule $SUBMODULE_PATH`
+or 
+`lit [command] --submodule $SUBMODULE_PATH [options]`
+
 In lit you can throw any command to just one submodule using the `--submodule` flag
 Ex.
 
