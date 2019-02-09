@@ -11,6 +11,7 @@ import(
 
 func PromptForInteractive(args []string, submodule *git.Submodule) (string, error) {
 	var response string
+
 	status, err := submodule.Status()
 
 	if err != nil {
@@ -23,7 +24,6 @@ func PromptForInteractive(args []string, submodule *git.Submodule) (string, erro
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt: "> ",
 		ForceUseInteractive: true,
-		UniqueEditLine: true,
 	})
 	rl.WriteStdin([]byte(strings.Join(args, " ")))
 	if err != nil {

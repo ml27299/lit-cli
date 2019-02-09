@@ -26,7 +26,7 @@ var commitCmd = &cobra.Command{
 }
 
 func commitRun(cmd *cobra.Command, args []string) {
-
+	
 	for index, arg := range commitBoolArgIndexMap {
 		commitBoolArgIndexMap[index] = arg.SetValue(commitBoolArgs[index])
 	}
@@ -59,7 +59,7 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 		status, err := _submodule.Status()
 		CheckIfError(err)
-		
+
 		err = bash.Commit(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 
