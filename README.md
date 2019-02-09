@@ -59,11 +59,11 @@ Sometimes you want to put different messages for different submodules, to accomp
 
 `lit --inter commit -am "update something"` - this will stop at every submodule and pop a prompt like
 
-`
+```console
 Interactive mode for $SUBMODULE_PATH
 Below is the command that will be supplied to $SUBMODULE_PATH, edit if not correct
 > --message="upadate something" --all
-`
+```
 
 Here you can edit the message
 `> --message="upadate another something" --all`
