@@ -66,7 +66,7 @@ Below is the command that will be supplied to $SUBMODULE_PATH, edit if not corre
 ```
 
 Here you can edit the message
-`> --message="upadate another something" --all`
+`> --message="update another something" --all`
 
 ### Specific submoldule
 In lit you can throw any command to just one submodule using the `--submodule` flag
