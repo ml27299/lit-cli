@@ -159,4 +159,6 @@ This command extends the `git checkout` command, but does it for all submodules 
 
 Ex. `lit checkout dev`
 
+### Extending
+If anyone would like me to extend the lit cli to include more git commands, please submit an issue or pull request
 
