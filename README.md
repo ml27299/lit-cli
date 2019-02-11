@@ -86,7 +86,9 @@ lit --submodule $SUBMODULE_PATH commit -am "update"
 ### Link
 `lit link`
 
-Hard links files or file to a custom destination within the application (uses lit.link.json)
+Hard links files or file to a custom destination within the application (uses lit.link.json). When a file is hard linked its linked file path is added to the .gitignore within your project, this is done so that there arent multiple copies of the same file within your application and to ensure when someone clones or pulls the repo, the files are still hard linked. 
+
+Lit adds these paths when you supply the commit or add command, so no need to worry about it
 
 ### Touch
 `lit touch`
