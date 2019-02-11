@@ -18,7 +18,7 @@ The lit cli can be used to build modular applications utilizing an architecture 
 ### Init
 `lit init`
 
-in the working directory of your project, this will create "lit.link.json", "lit.module.json" and ".gitignore", if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file)
+in the working directory of your project, this will create "lit.link.json", "lit.module.json" and ".gitignore", if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file). It's not necessary to configure the lit.module.json file for lit to work (lit will work right out of the box for any project already using git submodules), its just there so that you can easily add new submodules to an application.
 
 #### lit.link.json
 Ex.
