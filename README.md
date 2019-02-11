@@ -51,9 +51,9 @@ Ex.
 Run `lit init` to install any new submodules
 
 ### Interactive mode
-`lit --inter [command] [options]`__
-`lit [command] [options] --inter`__
-`lit [command] --inter [options]`__
+`lit --inter [command] [options]`<br />
+`lit [command] [options] --inter`<br />
+`lit [command] --inter [options]`<br />
 
 The Interactive mode is useful when different options need to be passed depending on the submodule
 Ex.
