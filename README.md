@@ -12,6 +12,9 @@ The lit cli can be used to build modular applications utilizing an architecture 
 ## Usage
 `lit --help`
 
+### Update lit to the latest version
+`sudo lit update`
+
 ### Init
 `lit init`
 
@@ -48,7 +51,7 @@ Ex.
 Run `lit init` to install any new submodules
 
 ### Interactive mode
-`lit --inter [command] [options]`
+`lit --inter [command] [options]`\n
 or
 `lit [command] [options] --inter`
 or 
