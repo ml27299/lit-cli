@@ -74,11 +74,9 @@ Here you can edit the message
 `> --message="update another something" --all`
 
 ### Specific submoldule
-`lit --submodule $SUBMODULE_PATH [command] [options]`
-or
-`lit [command] [options] --submodule $SUBMODULE_PATH`
-or 
-`lit [command] --submodule $SUBMODULE_PATH [options]`
+`lit --submodule $SUBMODULE_PATH [command] [options]`<br />
+`lit [command] [options] --submodule $SUBMODULE_PATH`<br />
+`lit [command] --submodule $SUBMODULE_PATH [options]`<br />
 
 In lit you can throw any command to just one submodule using the `--submodule` flag
 Ex.
