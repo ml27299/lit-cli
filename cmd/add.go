@@ -80,10 +80,12 @@ func addRun(cmd *cobra.Command, args []string) {
 			continue
 		}
 
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Add(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 	}
 
+	Info("Entering /...")
 	err = bash.Add(dir, args)
 	CheckIfError(err)
 }
