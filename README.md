@@ -4,7 +4,7 @@ lit-cli
 [![GitHub release](https://img.shields.io/github/release/ml27299/lit-cli.svg?style=flat-square)][release]
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
 
-[release]: https://github.com/tcnksm/go-gitconfig/releases
+[release]: https://github.com/ml27299/lit-cli/releases
 [license]: https://github.com/ml27299/lit-cli/blob/master/LICENSE
 
 
