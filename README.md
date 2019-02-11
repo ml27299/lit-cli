@@ -1,4 +1,9 @@
-# Lit CLI
+lit-cli
+====
+
+[![GitHub release](https://img.shields.io/github/release/ml27299/lit-cli.svg?style=flat-square)][release]
+[release]: https://github.com/tcnksm/go-gitconfig/releases
+
 
 The lit cli can be used to build modular applications utilizing an architecture built around hard links and git submodules. This cli extends the git cli so that the commands are indistinguishable. Hard links and git submodules are not a requirement for an application to use the lit cli, but the lit cli excels at managing applications that have submodules or hard linking
 
