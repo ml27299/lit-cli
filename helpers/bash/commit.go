@@ -5,7 +5,14 @@ import (
 	"os/exec"
 )
 
-func hasChanges() (bool, error) {
+func HasCommitChanges(path string) (bool, error) {
+	current_path, err := os.Getwd()
+	err = os.Chdir(path)
+
+	if err != nil {
+        return false, err
+    }
+
 	has_changes, err := exec.Command("git", "diff", "--exit-code").Output()
 	if err != nil && err.Error() != "exit status 1" {
 		return false, err
@@ -34,6 +41,11 @@ func hasChanges() (bool, error) {
 		return false, nil
 	}
 
+	err = os.Chdir(current_path)
+	if err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
 
@@ -44,15 +56,6 @@ func Commit(path string, args []string) error {
 	if err != nil {
         return err
     }
-
-    changes, err := hasChanges()
-    if err != nil {
-		return err
-	}
-
-	if !changes {
-		return nil
-	}
 
     args = append([]string{"commit"}, args...)
     cmd := exec.Command("git", args...)
@@ -80,15 +83,6 @@ func CommitViaBash(path string, args string) error {
 	if err != nil {
         return err
     }
-
-    changes, err := hasChanges()
-    if err != nil {
-		return err
-	}
-
-	if !changes {
-		return nil
-	}
 
     cmd := exec.Command("sh", "-c", "git commit "+args)
 

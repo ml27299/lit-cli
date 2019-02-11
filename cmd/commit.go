@@ -26,7 +26,7 @@ var commitCmd = &cobra.Command{
 }
 
 func commitRun(cmd *cobra.Command, args []string) {
-	
+
 	for index, arg := range commitBoolArgIndexMap {
 		commitBoolArgIndexMap[index] = arg.SetValue(commitBoolArgs[index])
 	}
@@ -71,7 +71,15 @@ func commitRun(cmd *cobra.Command, args []string) {
 		status, err := submodules[i].Status()
 		CheckIfError(err)
 
+		changes, err := bash.HasCommitChanges(dir+"/"+*&status.Path)
+		CheckIfError(err)
+		if !changes {
+			Info("Entering "+*&status.Path+"...")
+			continue
+		}
+
 		if interactive {
+
 			command, err := prompt.PromptForInteractive(args, submodules[i])
 			CheckIfError(err)
 
