@@ -96,8 +96,8 @@ Ex. `lit touch ./src/some/path/newfile.txt`
 If lit.link.json was configured to something like this
 ```toml
 [link "some-descriptor"]
-	dest = "src/some/path"
-	sources = ["some/source/path/*"]
+    dest = "src/some/path"
+    sources = ["some/source/path/*"]
 ```
 
 then newfile.txt will be created in "some/source/path" and hard linked to "./src/some/path"
