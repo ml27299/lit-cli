@@ -34,7 +34,7 @@ Ex.
 [submodule "{{name}}"]
 	path = "{{path}}"
 	url = "git@github.com:{{USER}}/{{REPO}}.git"
-[link "some descriptor"]
+[link "some-descriptor"]
 	dest = "src/some/folder"
 	sources = ["source/path/to/some/folder/*", "source/path/to/some/file.txt", "!source/path/to/some/folder/exclude.txt"]
 ```
@@ -94,13 +94,10 @@ a file to the source directory then relink. `lit touch` allows you to create a f
 Ex. `lit touch ./src/some/path/newfile.txt`
 
 If lit.link.json was configured to something like this
-```json
-[
-	{
-		"dest" : "src/some/path",
-		"sources" : ["some/source/path/*"]
-	},
-]
+```toml
+[link "some-descriptor"]
+	dest = "src/some/path"
+	sources = ["some/source/path/*"]
 ```
 
 then newfile.txt will be created in "some/source/path" and hard linked to "./src/some/path"
