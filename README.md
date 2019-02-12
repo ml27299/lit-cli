@@ -79,7 +79,7 @@ lit --submodule {{name}} commit -am "update" <br />
 Note: If the .gitmodules file has a name, but .litconfig doesntm than the {{name}} wont work, it must be included in the .litconfig file
 
 ### Link
-`lit link`
+`lit link` (runs after every pull command automatically)
 
 Hard links files or file to a custom destination within the application (uses .litconfig). When a file is hard linked its linked file path is added to the .gitignore within your project, this is done so that there arent multiple copies of the same file within your application and to ensure when someone clones or pulls the repo, the files are still hard linked. 
 
