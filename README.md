@@ -8,7 +8,7 @@ lit-cli
 [license]: https://github.com/ml27299/lit-cli/blob/master/LICENSE
 
 
-The lit cli manages git submodules and/or hard linked files. Its usefull when building modular applications that utilize an architecture built around git submodules. The lit cli extends the git cli so that the commands supplied are indistinguishable. With interactive mode, you get percision control over what commands are supplied to each submodule and with a simple configuration file(TOML formatted) you can easily add submodules or hard link file(s) to various destionations within an application.
+The lit cli manages git submodules and/or hard linked files. Its usefull when building modular applications that utilize an architecture built around git submodules. The lit cli extends the git cli so that the commands supplied are indistinguishable. With interactive mode, you get percision control over what commands are supplied to each submodule and with a simple configuration file(TOML formatted) you can easily add submodules or hard link file(s) to various destinations within an application.
 
 
 ## Install
