@@ -36,7 +36,7 @@ Ex.
 	url = "git@github.com:{{USER}}/{{REPO}}.git"
 [link "some descriptor"]
 	dest = "src/some/folder"
-	sources = ["source/path/to/some/folder/*", "source/path/to/some/file.txt"]
+	sources = ["source/path/to/some/folder/*", "source/path/to/some/file.txt", "!source/path/to/some/folder/exclude.txt"]
 ```
 
 Run `lit init` to install any new submodules
