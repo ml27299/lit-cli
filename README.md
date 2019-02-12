@@ -8,7 +8,8 @@ lit-cli
 [license]: https://github.com/ml27299/lit-cli/blob/master/LICENSE
 
 
-The lit cli can be used to build modular applications utilizing an architecture built around hard links and git submodules. This cli extends the git cli so that the commands are indistinguishable. Hard links and git submodules are not a requirement for an application to use the lit cli, but the lit cli excels at managing applications that have submodules or hard linking
+The lit cli manages git submodules and/or hard linked files. Its usefull when building modular applications that utilize an architecture built around git submodules. The cli extends the git cli so that the commands supplied are indistinguishable. With interactive mode, you get percision control over what commands are supplied to each submodule and with a simpe configuration file(TOML formatted) you can easily add submodules or hard link file(s) to various destionations within an application.
+
 
 ## Install
 
