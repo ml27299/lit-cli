@@ -30,7 +30,7 @@ in the working directory of your project, this will create ".litconfig" and ".gi
 
 #### .litconfig (TOML format)
 Ex.
-```console
+```toml
 [submodule "{{name}}"]
 	path = "{{path}}"
 	url = "git@github.com:{{USER}}/{{REPO}}.git"
