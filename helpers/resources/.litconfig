@@ -1,0 +1,10 @@
+#lit config file used to configure hard links or gitsubmodules
+# 
+# [submodule "module_name"]
+# 	path = "/path/for/submodule"
+# 	url = "git@github.com:USER/REPO.git"
+#
+#
+# [link "some descriptor"]
+# 	dest = "/path/to/destination"
+# 	sources = ["/path/to/source/folder/*", "path/to/source/file.txt"]

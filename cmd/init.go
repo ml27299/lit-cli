@@ -6,7 +6,7 @@ import (
 	"../helpers/parser"
 	. "../helpers"
 	"gopkg.in/src-d/go-git.v4"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport/ssh"
+	//"gopkg.in/src-d/go-git.v4/plumbing/transport/ssh"
 	"../helpers/paths"
 	"../helpers/bash"
 	"../helpers/resources"
@@ -52,31 +52,31 @@ func initRun(cmd *cobra.Command, args []string) {
     	has_gitmodule = true
     }
 
-    if _, err := os.Stat(root_dir+"/lit.link.json"); os.IsNotExist(err) {
+ //    if _, err := os.Stat(root_dir+"/lit.link.json"); os.IsNotExist(err) {
 
-		data, err := resources.Asset("lit.link.json")
-		file, err := os.Create(root_dir+"/lit.link.json")
+	// 	data, err := resources.Asset("lit.link.json")
+	// 	file, err := os.Create(root_dir+"/lit.link.json")
 
-		defer file.Close()
+	// 	defer file.Close()
 		
-		CheckIfError(err)
+	// 	CheckIfError(err)
 
-		_, err = file.Write(data)
-		CheckIfError(err)
-	}
+	// 	_, err = file.Write(data)
+	// 	CheckIfError(err)
+	// }
 
-	if _, err := os.Stat(root_dir+"/lit.module.json"); os.IsNotExist(err) {
+	// if _, err := os.Stat(root_dir+"/lit.module.json"); os.IsNotExist(err) {
 
-		data, err := resources.Asset("lit.module.json")
-		file, err := os.Create(root_dir+"/lit.module.json")
+	// 	data, err := resources.Asset("lit.module.json")
+	// 	file, err := os.Create(root_dir+"/lit.module.json")
 
-		defer file.Close()
+	// 	defer file.Close()
 
-		CheckIfError(err)
+	// 	CheckIfError(err)
 
-		_, err = file.Write(data)
-		CheckIfError(err)
-	}
+	// 	_, err = file.Write(data)
+	// 	CheckIfError(err)
+	// }
 
 	if _, err := os.Stat(root_dir+"/.gitignore"); os.IsNotExist(err) {
 
@@ -91,18 +91,33 @@ func initRun(cmd *cobra.Command, args []string) {
 		CheckIfError(err)
 	}
 
+	if _, err := os.Stat(root_dir+"/.litconfig"); os.IsNotExist(err) {
+
+		data, err := resources.Asset(".litconfig")
+		file, err := os.Create(root_dir+"/.litconfig")
+
+		defer file.Close()
+
+		CheckIfError(err)
+
+		_, err = file.Write(data)
+		CheckIfError(err)
+	}
+
     if has_gitmodule {
 
-    	auth, err := ssh.NewPublicKeysFromFile("git", home_dir+"/.ssh/id_rsa", "")
-		CheckIfError(err)
+    	bash.SubmoduleUpdate()
 
-		err = submodules.Update(&git.SubmoduleUpdateOptions{
-			Init: true,
-			RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-			Auth: auth,
-		})
+  //   	auth, err := ssh.NewPublicKeysFromFile("git", home_dir+"/.ssh/id_rsa", "")
+		// CheckIfError(err)
 
-		CheckIfError(err)
+		// err = submodules.Update(&git.SubmoduleUpdateOptions{
+		// 	Init: true,
+		// 	RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+		// 	Auth: auth,
+		// })
+
+		// CheckIfError(err)
     }
 
 	info, err  := parser.Config()
@@ -125,7 +140,7 @@ func initRun(cmd *cobra.Command, args []string) {
 	for _, gitmodule := range missing_submodules {
 
 		Info("Adding "+gitmodule.Repo)
-		bash.SubmoduleAdd(gitmodule.Repo, gitmodule.Dest)
+		bash.SubmoduleAdd(gitmodule.Repo, gitmodule.Dest, gitmodule.Name)
     }
 }
 

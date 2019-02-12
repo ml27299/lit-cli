@@ -3,6 +3,9 @@ package helpers
 import (
 	"gopkg.in/src-d/go-git.v4"
 	"errors"
+	"os"
+	"./paths"
+	"./parser"
 )
 
 func GetSubmodules(path string) (git.Submodules, error){
@@ -27,6 +30,11 @@ func GetSubmodules(path string) (git.Submodules, error){
 func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, error) {
 	var response *git.Submodule
 
+	dir, err := paths.FindRootDir()
+	if err != nil {
+		return response, err
+	}
+
 	for i := 0; i < len(submodules); i++ {
 
 		status, err := submodules[i].Status()
@@ -37,6 +45,20 @@ func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, err
 		if status.Path == value {
 			response = submodules[i]
 			break
+		}
+	}
+
+
+	if _, err := os.Stat(dir+"/.litconfig"); err == nil && response == nil {
+		modules, err := parser.ConfigModules(dir+"/.litconfig")
+		for i := 0; i < len(modules); i++ {
+			if modules[i].Name == value {
+				response, err = FindSubmodule(submodules, modules[i].Dest)
+				if err != nil{
+					return response, err
+		 		}
+				break
+			}
 		}
 	}
 
