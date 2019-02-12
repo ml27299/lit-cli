@@ -93,7 +93,7 @@ a file to the source directory then relink. `lit touch` allows you to create a f
 
 Ex. `lit touch ./src/some/path/newfile.txt`
 
-If lit.link.json was configured to something like this
+If .litconfig was configured to something like this
 ```toml
 [link "some-descriptor"]
     dest = "src/some/path"
