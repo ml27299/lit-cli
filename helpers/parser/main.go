@@ -43,19 +43,27 @@ func ConfigLinkItems(path string) ([]LinkItem, error) {
 		}
 
 		var sources []string
+		var removeSources []string
 		for _, key := range keys {
 
 			dest := viper.GetString(key+".dest")
 			sources_interfaces := viper.Get(key+".sources")
 			sources = nil
+			removeSources = nil
 
 			for _, sources_interface := range sources_interfaces.([]interface{}) {
-				sources = append(sources, sources_interface.(string))
+				if sources_interface.(string)[:1] == "!" {
+					str := sources_interface.(string)
+					removeSources = append(removeSources, str[1:len(str)])
+				}else {
+					sources = append(sources, sources_interface.(string))
+				}
 			}
 
 			response = append(response, LinkItem{
 				Dest: dest,
 				Sources: sources,
+				RemoveSources: removeSources,
 			})
 		}
 

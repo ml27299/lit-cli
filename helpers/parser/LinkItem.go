@@ -11,6 +11,34 @@ import(
 type LinkItem struct {
 	Dest string
 	Sources []string
+	RemoveSources []string
+}
+
+func (l *LinkItem) Filter(sources []string) ([]string, error){
+	var response []string
+
+	for _, source := range sources {
+		
+		found := false
+		for _, rm_source := range l.RemoveSources {
+
+			rm_source, err := paths.Normalize(rm_source)
+			if err != nil {
+				return response, err
+			}
+
+			if rm_source == source {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			response = append(response, source)
+		}
+	}
+
+	return response, nil
 }
 
 func (l *LinkItem) FindMatchingSources(path string) ([]string, error) {
@@ -44,6 +72,11 @@ func (l *LinkItem) Expand() ([]Link, error) {
 				return response, err
 			}
 
+			sources, err = l.Filter(sources)
+			if err != nil {
+				return response, err
+			}
+			
 			links, err := l.CreateLinks(sources, og_source)
 			if err != nil {
 				return response, err
@@ -53,7 +86,12 @@ func (l *LinkItem) Expand() ([]Link, error) {
 			continue
 		}
 
-		link, err := l.CreateLink(og_source, og_source)
+		sources, err := l.Filter([]string{og_source})
+		if err != nil {
+			return response, err
+		}
+
+		link, err := l.CreateLink(sources[0], og_source)
 		if err != nil {
 			return response, err
 		}
