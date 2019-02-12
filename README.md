@@ -26,35 +26,18 @@ The lit cli can be used to build modular applications utilizing an architecture 
 ### Init
 `lit init`
 
-in the working directory of your project, this will create "lit.link.json", "lit.module.json" and ".gitignore", if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file). It's not necessary to configure the lit.module.json file for lit to work (lit will work right out of the box for any project already using git submodules), its just there so that you can easily add new submodules to an application.
+in the working directory of your project, this will create ".litconfig" and ".gitignore" file, if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file). It's not necessary to configure the .litconfig file for lit to work (lit will work right out of the box for any project already using git submodules), its just there so that you can easily add new submodules to an application.
 
-#### lit.link.json
+#### .litconfig (TOML format)
 Ex.
-```json
-[
-	{
-		"dest" : "src/some/path",
-		"sources" : ["some/source/path/*", "some/source/path/somefile.txt"]
-	},
-
-	{
-		"dest" : "src/some/other/path",
-		"sources" : ["some/source/path/somefile.txt"]
-	}
-]
+```console
+[submodule "{{name}}"]
+	path = "{{path}}"
+	url = "git@github.com:{{USER}}/{{REPO}}.git"
+[link "some descriptor"]
+	dest = "src/some/folder"
+	sources = ["source/path/to/some/folder/*", "source/path/to/some/file.txt"]
 ```
-
-#### lit.module.json
-Ex.
-```json
-[
-	{
-		"dest" : "some/path",
-		"repo" : "git@github.com:USERNAME/PACKAGE.git"
-	}
-]
-```
-
 
 Run `lit init` to install any new submodules
 
@@ -82,14 +65,18 @@ Here you can edit the message
 `> --message="update another something" --all`
 
 ### Specific submoldule
-`lit --submodule $SUBMODULE_PATH [command] [options]`<br />
-`lit [command] [options] --submodule $SUBMODULE_PATH`<br />
-`lit [command] --submodule $SUBMODULE_PATH [options]`<br />
+`lit --submodule path|name [command] [options]`<br />
+`lit [command] [options] --submodule path|name`<br />
+`lit [command] --submodule path|name [options]`<br />
 
 In lit you can throw any command to just one submodule using the `--submodule` flag
 Ex.
 
-lit --submodule $SUBMODULE_PATH commit -am "update"
+lit --submodule {{path}} commit -am "update" <br />
+The name provided in the .litconfig file can also be used
+lit --submodule {{name}} commit -am "update" <br />
+
+Note: If the .gitmodules file has a name, but .litconfig doesntm than the {{name}} wont work, it must be included in the .litconfig file
 
 ### Link
 `lit link`
