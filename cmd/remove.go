@@ -6,6 +6,7 @@ import (
 	"../helpers/paths"
 	"../helpers/bash"
 	"os/user"
+	"os"
 	"errors"
 )
 
@@ -32,6 +33,11 @@ func removeRun(cmd *cobra.Command, args []string) {
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 	
+	err = os.Chdir(dir)
+	if err != nil {
+        return err
+    }
+
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
