@@ -71,7 +71,7 @@ func SubmoduleRemove(name, path string) error {
 		return err
 	}
 
-	cmd = exec.Command("git", "rm", "-f", "--cached", path)
+	cmd = exec.Command("git", "rm", "-rf", "--cached", path)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
