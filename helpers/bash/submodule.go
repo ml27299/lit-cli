@@ -7,7 +7,7 @@ import (
 
 func SubmoduleAdd(repo, dest string, name string) error {
 
-	cmd := exec.Command("git", "submodule", "add", "--name", name, repo, dest)
+	cmd := exec.Command("git", "submodule", "add", "-f", "--name", name, repo, dest)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -81,6 +81,19 @@ func SubmoduleRemove(name, path string) error {
 	}
 
 	cmd = exec.Command("rm", "-rf", ".git/modules/"+name)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil && err.Error() != "exit status 1" {
+		return err
+	}
+
+	if "./"+path == "./" {
+		return nil
+	}
+
+	cmd = exec.Command("rm", "-rf", "./"+path)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
