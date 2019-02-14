@@ -6,6 +6,9 @@ import (
 	"os"
 	"./paths"
 	"./parser"
+	"strings"
+	//"fmt"
+	"os/exec"
 )
 
 func GetSubmodules(path string) (git.Submodules, error){
@@ -26,6 +29,32 @@ func GetSubmodules(path string) (git.Submodules, error){
 
 	return submodules, nil
 }
+
+// func FindSubmoduleAndName(submodules git.Submodules, value string) (*git.Submodule, string, error) {
+// 	var (
+// 		submodule *git.Submodule
+// 		name string
+// 	)
+
+// 	if _, err := os.Stat(dir+"/.litconfig"); err == nil && response == nil {
+// 		modules, err := parser.ConfigModules(dir+"/.litconfig")
+// 		for i := 0; i < len(modules); i++ {
+// 			if modules[i].Name == value {
+				
+// 				submodule, err = FindSubmodule(submodules, modules[i].Dest)
+// 				if err != nil{
+// 					return submodule, name, err
+// 		 		}
+
+// 				break
+// 			}
+// 		}
+// 	}else {
+
+// 	}
+
+// 	return submodule, name, nil
+// }
 
 func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, error) {
 	var response *git.Submodule
@@ -48,12 +77,30 @@ func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, err
 		}
 	}
 
-
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil && response == nil {
 		modules, err := parser.ConfigModules(dir+"/.litconfig")
 		for i := 0; i < len(modules); i++ {
 			if modules[i].Name == value {
 				response, err = FindSubmodule(submodules, modules[i].Dest)
+				if err != nil{
+					return response, err
+		 		}
+				break
+			}
+		}
+	}
+
+	if response == nil {
+		out, err := exec.Command("sh", "-c", "git config -f .gitmodules --list").Output()
+		if err != nil && err.Error() != "exit status 1" {
+			return response, err
+		}
+
+		split := strings.Split(string(out), "\n")
+		for _, item := range split {
+			if strings.Contains(item, "submodule."+value+".path") {
+				path := strings.Split(item, "submodule."+value+".path=")
+				response, err = FindSubmodule(submodules, path[len(path) - 1])
 				if err != nil{
 					return response, err
 		 		}
