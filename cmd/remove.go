@@ -34,9 +34,7 @@ func removeRun(cmd *cobra.Command, args []string) {
 	CheckIfError(err)
 	
 	err = os.Chdir(dir)
-	if err != nil {
-        return err
-    }
+	CheckIfError(err)
 
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
