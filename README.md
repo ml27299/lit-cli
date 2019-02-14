@@ -27,7 +27,7 @@ The lit cli manages git submodules and/or hard linked file(s). The lit cli exten
 ### Init
 `lit init`
 
-in the working directory of your project, this will create ".litconfig" and ".gitignore" file, if the directory doesnt already have it, it will also initialize any submodules in the working directory (if the working directory has a .gitmodules file). It's not necessary to configure the .litconfig file for lit to work (lit will work right out of the box for any project already using git submodules), its just there so that you can easily add new submodules to an application.
+in the working directory of your project, this will create a git project(if it didnt already exist) and add ".litconfig" and ".gitignore" files to the project, if it doesnt already have it. It's not necessary to configure the .litconfig file for lit to work (lit will work right out of the box for any project already using git submodules), its just there so that you can easily add new submodules to an application.
 
 #### .litconfig (TOML format)
 Ex.
@@ -40,14 +40,17 @@ Ex.
 	sources = ["source/path/to/some/folder/*", "source/path/to/some/file.txt", "!source/path/to/some/folder/exclude.txt"]
 ```
 
-Run `lit init` to install any new submodules
+### Build
+`lit build`
+
+Initializes(if .gitmodules exsists) and/or adds(if .litconfig exsists) git submodules to a project. The build command also links any files configurged for linking
 
 ### Interactive mode
 `lit --inter [command] [options]`<br />
 `lit [command] [options] --inter`<br />
 `lit [command] --inter [options]`<br />
 
-The Interactive mode is useful when different options need to be passed depending on the submodule
+Interactive mode is useful when different options need to be passed depending on the submodule
 Ex.
 
 `lit commt -am "update something"` - this will send the message "update something" to all submodules and the main application
