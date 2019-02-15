@@ -45,6 +45,11 @@ Ex.
 
 Initializes(if .gitmodules exsists) and/or adds(if .litconfig exsists) git submodules to a project. The build command also links any files configurged for linking
 
+### Remove
+`lit remove name|path`
+
+Properly removes a submodule from a project based on the module's name or path
+
 ### Interactive mode
 `lit --inter [command] [options]`<br />
 `lit [command] [options] --inter`<br />
