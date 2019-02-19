@@ -70,13 +70,10 @@ func CreateAndLink(source string, items []parser.LinkItem, args []string) error 
 		return err
 	}
 
-	err = Link(parser.Link{
+	Link(parser.Link{
 		Dest: og_newfilepath+"/"+newfilename,
 		Source: newfilepath+"/"+newfilename,
 	})
-	if err != nil {
-		return err
-	}
 
 	return nil
 }

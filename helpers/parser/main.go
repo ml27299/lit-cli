@@ -34,6 +34,11 @@ func ConfigLinkItems(path string) ([]LinkItem, error) {
 	for _, key := range keys {
 
 		dest := viper.GetString(key+".dest")
+		normalized_dest, err := paths.Normalize(dest)
+		if err != nil {
+			return response, err 
+		}
+
 		sources_interfaces := viper.Get(key+".sources")
 		sources = nil
 		removeSources = nil
@@ -47,8 +52,10 @@ func ConfigLinkItems(path string) ([]LinkItem, error) {
 			}
 		}
 
+
 		response = append(response, LinkItem{
 			Dest: dest,
+			NormalizedDest: normalized_dest,
 			Sources: sources,
 			RemoveSources: removeSources,
 		})

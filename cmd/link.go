@@ -33,14 +33,12 @@ func Copy(src string, dst string) (int64, error) {
     return nBytes, err
 }
 
-func Link(link parser.Link) error {
+func Link(link parser.Link) {
 
 	s_fileinfo, s_err := os.Stat(link.Source)
 	d_fileinfo, d_err := os.Stat(link.Dest)
 
-	if s_err != nil {
-		return s_err
-	}
+	CheckIfError(s_err)
 
 	if d_err == nil {
 		if !os.SameFile(s_fileinfo, d_fileinfo) {
@@ -59,7 +57,6 @@ func Link(link parser.Link) error {
 		os.Link(link.Source, link.Dest)
 	}
 
-	return nil
 }
 
 func linkRun(cmd *cobra.Command, args []string) {
@@ -71,8 +68,7 @@ func linkRun(cmd *cobra.Command, args []string) {
 	CheckIfError(err)
 
 	for _, link := range links {
-		err := Link(link)
-		CheckIfError(err)
+		Link(link)
 	}
 }
 

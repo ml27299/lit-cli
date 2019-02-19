@@ -1,8 +1,6 @@
 package parser
 
 import(
-	//"fmt"
-	"os"
 	"strings"
 	"path/filepath"
 	"../paths"
@@ -10,6 +8,7 @@ import(
 
 type LinkItem struct {
 	Dest string
+	NormalizedDest string
 	Sources []string
 	RemoveSources []string
 }
@@ -61,12 +60,12 @@ func (l *LinkItem) Expand() ([]Link, error) {
 	for _, og_source := range l.Sources {
 
 		og_source, err := paths.Normalize(og_source)
+		og_source_dir := filepath.Dir(og_source)
 		if err != nil {
 			return response, err
 		}
 
 		if strings.Contains(og_source, "/*"){
-			
 			sources, err := paths.Find(filepath.Dir(og_source))
 			if err != nil {
 				return response, err
@@ -77,7 +76,7 @@ func (l *LinkItem) Expand() ([]Link, error) {
 				return response, err
 			}
 			
-			links, err := l.CreateLinks(sources, og_source)
+			links, err := l.CreateLinks(sources, og_source_dir)
 			if err != nil {
 				return response, err
 			}
@@ -91,7 +90,7 @@ func (l *LinkItem) Expand() ([]Link, error) {
 			return response, err
 		}
 
-		link, err := l.CreateLink(sources[0], og_source)
+		link, err := l.CreateLink(sources[0], og_source_dir)
 		if err != nil {
 			return response, err
 		}
@@ -101,12 +100,12 @@ func (l *LinkItem) Expand() ([]Link, error) {
 	return response, nil
 }
 
-func (l *LinkItem) CreateLinks(sources []string, og_source string) ([]Link, error) {
+func (l *LinkItem) CreateLinks(sources []string, og_source_dir string) ([]Link, error) {
 	var response []Link
 
 	for _,source := range sources {
 
-		link, err := l.CreateLink(source, og_source)
+		link, err := l.CreateLink(source, og_source_dir)
 		if err != nil {
 			return response, err
 		}
@@ -117,28 +116,20 @@ func (l *LinkItem) CreateLinks(sources []string, og_source string) ([]Link, erro
 	return response, nil
 }
 
-func (l *LinkItem) CreateLink(source string, og_source string) (Link, error) {
-	var (
-		f os.FileInfo
-		response Link
-	)
+func (l *LinkItem) CreateLink(source string, og_source_dir string) (Link, error) {
 
-	og_source_dir := filepath.Dir(og_source)
 	source_dir := filepath.Dir(source)
+	source_slice := strings.Split(source, "/")
+	source_name := source_slice[len(source_slice) - 1]
 
-	dest, err := paths.Normalize(l.Dest)
-	f, err = os.Stat(source)
-	if err != nil {
-		return response, err
-	}
-
+	dest := l.NormalizedDest
 	dest_ext := strings.Replace(source_dir, og_source_dir, "", -1)
 	if dest_ext != "" {
 		dest = dest+dest_ext
 	}
 
 	return Link{
-		Dest: dest+"/"+f.Name(),
+		Dest: dest+"/"+source_name,
 		Source: source,
 	}, nil
 }
