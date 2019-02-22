@@ -3,6 +3,7 @@ package paths
 import (
 	//"fmt"
 	"os"
+	"strings"
 	"path/filepath"
 	"errors"
 )
@@ -10,12 +11,38 @@ import (
 var paths []string
 func Normalize(str string) (string, error) {
 	var response string
-	dir, err := FindRootDir()
 
+	root_dir, err := FindRootDir()
 	if err != nil {
 		return response, err
 	}
 	
+	config_files, err := FindConfig(root_dir)
+	if err != nil {
+		return response, err
+	}
+
+	current_path, err := os.Getwd()
+	if err != nil {
+        return response, err
+    }
+
+    var dir string
+    if root_dir != current_path {
+    	for _, config_file := range config_files {
+    		if filepath.Dir(config_file) == current_path {
+    			dir = filepath.Dir(config_file)
+    			break
+    		}
+    	}
+    }else {
+    	dir = root_dir
+    }
+
+    if dir == "" {
+		return dir, errors.New("couldnt find dirctory for normalization...")
+	}
+
 	if str[:1] == "/" {
 		response = dir+str
 	}else {
@@ -33,6 +60,17 @@ func Find(path string) ([]string, error) {
 	paths = nil
 
 	err := filepath.Walk(path, visitFind)
+    if err != nil {
+        return paths, err
+    }
+
+   	return paths, nil
+}
+
+func FindConfig(path string) ([]string, error) {
+	paths = nil
+
+	err := filepath.Walk(path, visitFindConfig)
     if err != nil {
         return paths, err
     }
@@ -70,7 +108,7 @@ func FindRootDir() (string, error) {
 
 func visitFind(path string, f os.FileInfo, err error) error {
 
-    if f.IsDir() || f.Name() == ".git" {
+    if f.IsDir() || strings.Contains(f.Name(), ".git") {
         return nil
     }
 
@@ -78,9 +116,18 @@ func visitFind(path string, f os.FileInfo, err error) error {
     return nil
 }
 
+
 func visitFindRootDir(path string, f os.FileInfo, err error) error {
 
     if f.IsDir() && f.Name() == ".git" {
+        paths = append(paths, path)
+    }
+
+    return nil
+}  
+
+func visitFindConfig(path string, f os.FileInfo, err error) error {
+    if !f.IsDir() && f.Name() == ".litconfig" {
         paths = append(paths, path)
     }
 

@@ -79,49 +79,61 @@ func CreateAndLink(source string, items []parser.LinkItem, args []string) error 
 }
 
 func touchRun(cmd *cobra.Command, args []string) {
-	
+	dir, err := paths.FindRootDir()
+	CheckIfError(err)
+
 	_, newfilename := filepath.Split(args[0])
 	newfilepath, err := paths.Normalize(filepath.Dir(args[0]))
-	
-	info, err := parser.Config()
-	CheckIfError(err)
-	
-	items, err := info.FindMatchingLinkItems(newfilepath)
-	CheckIfError(err)
-	
-	var (
-		matched_sources []string
-		matched_items []parser.LinkItem
-	)
 
-	for _, item := range items {
+	config_files, err := paths.FindConfig(dir)
+	CheckIfError(err)
 
-		sources, err := item.FindMatchingSources(newfilepath)
+	for _, config_file := range config_files {
+
+		config_file_dir := filepath.Dir(config_file)
+		err = os.Chdir(config_file_dir)
+		CheckIfError(err)
+
+		info, err := parser.ConfigViaPath(config_file_dir)
+		CheckIfError(err)
+	
+		items, err := info.FindMatchingLinkItems(newfilepath)
 		CheckIfError(err)
 		
-		matched_sources = parser.AppendUnique(matched_sources, sources...)
-		if len(sources) > 0 {
-			matched_items = append(matched_items, item)
+		var (
+			matched_sources []string
+			matched_items []parser.LinkItem
+		)
+
+		for _, item := range items {
+
+			sources, err := item.FindMatchingSources(newfilepath)
+			CheckIfError(err)
+			
+			matched_sources = parser.AppendUnique(matched_sources, sources...)
+			if len(sources) > 0 {
+				matched_items = append(matched_items, item)
+			}
 		}
-	}
-	
-	if len(matched_sources) == 0 && len(matched_items) == 0 {
+		
+		if len(matched_sources) == 0 && len(matched_items) == 0 {
 
-		_, err = os.Create(args[0])
-		CheckIfError(err)
+			_, err = os.Create(args[0])
+			CheckIfError(err)
 
-	} else if len(matched_sources) == 1 {
+		} else if len(matched_sources) == 1 {
 
-		err = CreateAndLink(matched_sources[0], matched_items, args)
-		CheckIfError(err)
+			err = CreateAndLink(matched_sources[0], matched_items, args)
+			CheckIfError(err)
 
-	} else if len(matched_sources) > 1 {
+		} else if len(matched_sources) > 1 {
 
-		index, err := prompt.PromptForMultiSource(matched_sources, newfilename, newfilepath)
-		CheckIfError(err)
+			index, err := prompt.PromptForMultiSource(matched_sources, newfilename, newfilepath)
+			CheckIfError(err)
 
-		err = CreateAndLink(matched_sources[index], matched_items, args)
-		CheckIfError(err)
+			err = CreateAndLink(matched_sources[index], matched_items, args)
+			CheckIfError(err)
+		}
 	}
 }
 

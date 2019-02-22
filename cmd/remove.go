@@ -8,6 +8,7 @@ import (
 	"os/user"
 	"os"
 	"errors"
+	"path/filepath"
 )
 
 // var (
@@ -32,7 +33,21 @@ func removeRun(cmd *cobra.Command, args []string) {
 
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
-	
+
+	config_files, err := paths.FindConfig(dir)
+	CheckIfError(err)
+
+	current_path, err := os.Getwd()
+	CheckIfError(err)
+
+	for _, config_file := range config_files {
+		config_file = filepath.Dir(config_file)
+		if current_path == config_file {
+			dir = config_file
+			break
+		}
+	}
+
 	err = os.Chdir(dir)
 	CheckIfError(err)
 
@@ -42,11 +57,11 @@ func removeRun(cmd *cobra.Command, args []string) {
 	submodule, err := FindSubmodule(submodules, args[0])
 	CheckIfError(err)
 
-	status, err := submodule.Status()
-	CheckIfError(err)
+	// status, err := submodule.Status()
+	// CheckIfError(err)
 
-	Info("Removing "+*&status.Path+"...")
-	err = bash.SubmoduleRemove(args[0], *&status.Path)
+	Info("Removing "+*&submodule.Submodule.Config().Path+"...")
+	err = bash.SubmoduleRemove(args[0], *&submodule.Submodule.Config().Path, submodule.Ext)
 	CheckIfError(err)
 }
 

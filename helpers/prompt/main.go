@@ -6,10 +6,10 @@ import(
 	. "../../helpers"
 	"strings"
 	"../paths"
-	"gopkg.in/src-d/go-git.v4"
+	//"gopkg.in/src-d/go-git.v4"
 )
 
-func PromptForInteractive(args []string, submodule *git.Submodule) (string, error) {
+func PromptForInteractive(args []string, submodule *Module) (string, error) {
 	var response string
 
 	status, err := submodule.Status()

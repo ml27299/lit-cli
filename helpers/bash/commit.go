@@ -1,6 +1,6 @@
 package bash
 import (
-	"fmt"
+	//"fmt"
 	"os"
 	"os/exec"
 )
@@ -13,40 +13,44 @@ func HasCommitChanges(path string) (bool, error) {
         return false, err
     }
 
-	has_changes, err := exec.Command("git", "diff", "--exit-code").Output()
+	output, err := exec.Command("git", "status", "--porcelain").Output()
 	if err != nil && err.Error() != "exit status 1" {
 		return false, err
 	}
 
-	if string(has_changes[:]) == "" {
-		has_changes, err = exec.Command("git", "diff", "--cache", "--exit-code").Output()
-		if err != nil && err.Error() != "exit status 1" {
-			return false, err
-		}
-	}
+	// if string(has_changes[:]) == "" {
+	// 	has_changes, err = exec.Command("git", "diff", "--cache", "--exit-code").Output()
+	// 	if err != nil && err.Error() != "exit status 1" {
+	// 		return false, err
+	// 	}
+	// }
 
-	if string(has_changes[:]) == "" {
+	// if string(has_changes[:]) == "" {
 
-		untracked_files, err := exec.Command("git", "ls-files", "--other", "--exclude-standard", "--directory").Output()
-		if err != nil && err.Error() != "exit status 1" {
-			return false, err
-		}
+	// 	untracked_files, err := exec.Command("git", "ls-files", "--other", "--exclude-standard", "--directory").Output()
+	// 	if err != nil && err.Error() != "exit status 1" {
+	// 		return false, err
+	// 	}
 
-		if string(untracked_files[:]) == "" {
-			return false, nil
-		}
+	// 	if string(untracked_files[:]) == "" {
+	// 		return false, nil
+	// 	}
 
-		fmt.Println("Untacked files...")
-		fmt.Println(string(untracked_files))
-		return false, nil
-	}
+	// 	fmt.Println("Untacked files...")
+	// 	fmt.Println(string(untracked_files))
+	// 	return false, nil
+	// }
 
 	err = os.Chdir(current_path)
 	if err != nil {
 		return false, err
 	}
 
-	return true, nil
+	if string(output) != ""{
+		return true, nil
+	}else {
+		return false, nil
+	}
 }
 
 func Commit(path string, args []string) error {	

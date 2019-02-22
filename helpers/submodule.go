@@ -9,25 +9,102 @@ import (
 	"strings"
 	//"fmt"
 	"os/exec"
+	"path/filepath"
 )
 
-func GetSubmodules(path string) (git.Submodules, error){
+type ModuleConfig struct{
+	Name string
+    Path string
+    URL string
+    Branch string
+}
+
+type ModuleStatus struct{
+	Path string
+}
+
+type Module struct{
+	Ext string
+	Submodule *git.Submodule
+}
+
+type Modules []*Module
+func (m *Module) Status() (*ModuleStatus, error) {
+	submodule_conf := m.Submodule.Config()
+	if m.Ext != "" {
+		return &ModuleStatus {
+			Path: m.Ext+"/"+submodule_conf.Path,
+		}, nil
+	}else {
+		return &ModuleStatus {
+			Path: submodule_conf.Path,
+		}, nil
+	}
+}
+func (m *Module) Config() (*ModuleConfig) {
+	submodule_conf := m.Submodule.Config()
+	if m.Ext != "" {
+		return &ModuleConfig {
+			Path: m.Ext+"/"+submodule_conf.Path,
+			Name: submodule_conf.Name,
+			URL: submodule_conf.URL,
+			Branch: submodule_conf.Branch,
+		}
+	}else {
+		return &ModuleConfig {
+			Path: submodule_conf.Path,
+			Name: submodule_conf.Name,
+			URL: submodule_conf.URL,
+			Branch: submodule_conf.Branch,
+		}
+	}
+}
+
+func GetSubmodules(path string) (Modules, error){
+
+	var response Modules
 	repo, err := git.PlainOpen(path)
 	if err != nil {
-		return nil, err
+		return response, err
+	}
+
+	root_dir, err := paths.FindRootDir()
+	if err != nil {
+		return response, err
 	}
 
 	worktree, err := repo.Worktree()
 	if err != nil {
-		return nil, err
+		return response, err
 	}
 
 	submodules, err := worktree.Submodules()
 	if err != nil {
-		return nil, err
+		return response, err
 	}
 
-	return submodules, nil
+	for _, submodule := range submodules {
+
+		submodule_config := submodule.Config()
+		ext := ""
+		if path != root_dir {
+			ext = strings.Replace(path, root_dir+"/", "", 1)
+		}
+
+		response = append(response, &Module{
+			Ext: ext,
+			Submodule: submodule,
+		})
+
+		modules, err := GetSubmodules(path+"/"+submodule_config.Path)
+		if err != nil {
+			return response, err
+		}
+
+		response = append(response, modules...)
+	}
+
+	return response, nil
 }
 
 // func FindSubmoduleAndName(submodules git.Submodules, value string) (*git.Submodule, string, error) {
@@ -56,14 +133,38 @@ func GetSubmodules(path string) (git.Submodules, error){
 // 	return submodule, name, nil
 // }
 
-func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, error) {
-	var response *git.Submodule
+func FindSubmodule(submodules Modules, value string) (*Module, error) {
+	var response *Module
 
 	dir, err := paths.FindRootDir()
 	if err != nil {
 		return response, err
 	}
 
+	config_files, err := paths.FindConfig(dir)
+	if err != nil {
+		return response, err
+	}
+
+	current_path, err := os.Getwd()
+	if err != nil {
+		return response, err
+	}
+	
+	var config_file_match string
+	for _, config_file := range config_files {
+		config_file = filepath.Dir(config_file)
+		if current_path == config_file {
+			config_file_match = config_file
+			break
+		}
+	}
+
+	ext := ""
+	if config_file_match != "" && config_file_match != dir {
+		ext = strings.Replace(config_file_match, dir+"/", "", 1)
+	}
+	
 	for i := 0; i < len(submodules); i++ {
 
 		status, err := submodules[i].Status()
@@ -71,7 +172,10 @@ func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, err
 			return response, err
  		}
 
-		if status.Path == value {
+		if ext != "" && status.Path == ext+"/"+value {
+			response = submodules[i]
+			break
+		}else if status.Path == value {
 			response = submodules[i]
 			break
 		}
@@ -91,7 +195,13 @@ func FindSubmodule(submodules git.Submodules, value string) (*git.Submodule, err
 	}
 
 	if response == nil {
-		out, err := exec.Command("sh", "-c", "git config -f .gitmodules --list").Output()
+
+		cmd := "git config -f .gitmodules --list"
+		if ext != "" {
+			cmd = "git config -f "+dir+"/"+ext+"/.gitmodules --list"
+		}
+
+		out, err := exec.Command("sh", "-c", cmd).Output()
 		if err != nil && err.Error() != "exit status 1" {
 			return response, err
 		}

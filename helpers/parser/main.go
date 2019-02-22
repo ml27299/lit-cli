@@ -52,7 +52,6 @@ func ConfigLinkItems(path string) ([]LinkItem, error) {
 			}
 		}
 
-
 		response = append(response, LinkItem{
 			Dest: dest,
 			NormalizedDest: normalized_dest,
@@ -100,6 +99,33 @@ func ConfigModules(path string) ([]GitModule, error) {
 
 	return response, nil
 }
+
+func ConfigViaPath(dir string) (ParseInfo, error) {
+	
+	var response ParseInfo
+	var (
+		linkItems []LinkItem
+		modules []GitModule
+	)
+
+	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
+		linkItems, err = ConfigLinkItems(dir+"/.litconfig")
+	}else {
+		return response, err
+	}
+
+	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
+		modules, err = ConfigModules(dir+"/.litconfig")
+	}else {
+		return response, err
+	}
+
+	return ParseInfo{
+		LinkItems: linkItems,
+		GitModules: modules,
+		Config: ConfigInfo{},
+	}, nil
+}	
 
 func Config() (ParseInfo, error) {
 

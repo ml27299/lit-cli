@@ -5,6 +5,7 @@ import (
 	"io"
 	"github.com/spf13/cobra"
 	"../helpers/parser"
+	"../helpers/paths"
 	. "../helpers"
 	"path/filepath"
 )
@@ -61,14 +62,27 @@ func Link(link parser.Link) {
 
 func linkRun(cmd *cobra.Command, args []string) {
 
-	info, err  := parser.Config()
+	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 
-	links, err := info.GetLinks()
+	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
 
-	for _, link := range links {
-		Link(link)
+	for _, config_file := range config_files {
+
+		config_file_dir := filepath.Dir(config_file)
+		err = os.Chdir(config_file_dir)
+		CheckIfError(err)
+
+		info, err := parser.ConfigViaPath(config_file_dir)
+		CheckIfError(err)
+
+		links, err := info.GetLinks()
+		CheckIfError(err)
+		
+		for _, link := range links {
+			Link(link)
+		}
 	}
 }
 

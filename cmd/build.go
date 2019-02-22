@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"path/filepath"
 	"github.com/spf13/cobra"
 	. "../helpers"
 	"../helpers/paths"
@@ -25,9 +26,6 @@ func buildRun(cmd *cobra.Command, args []string) {
 	err = os.Chdir(dir)
 	CheckIfError(err)
 
-	submodules, err := GetSubmodules(dir)
-	CheckIfError(err)
-
 	_, err = os.Stat(dir+"/.gitmodules")
     if _, ok := err.(*os.PathError); err != nil && !ok {
     	CheckIfError(err)
@@ -35,28 +33,45 @@ func buildRun(cmd *cobra.Command, args []string) {
     	bash.SubmoduleUpdate()
     }
 
-	info, err  := parser.Config()
+    submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
-	var missing_submodules []parser.GitModule
-	for _, gitmodule := range info.GitModules {
-		found := false
-		for _, submodule := range submodules {
-			if submodule.Config().URL == gitmodule.Repo {
-				found = true
-				break
+    config_files, err := paths.FindConfig(dir)
+	CheckIfError(err)
+
+	for _, config_file := range config_files {
+
+		config_file_dir := filepath.Dir(config_file)
+		err = os.Chdir(config_file_dir)
+		CheckIfError(err)
+
+		info, err := parser.ConfigViaPath(config_file_dir)
+		CheckIfError(err)
+
+		var missing_submodules []parser.GitModule
+		for _, gitmodule := range info.GitModules {
+			found := false
+			for _, submodule := range submodules {
+				if submodule.Config().URL == gitmodule.Repo {
+					found = true
+					break
+				}
+			}
+			if !found {
+				missing_submodules = append(missing_submodules, gitmodule)
 			}
 		}
-		if !found {
-			missing_submodules = append(missing_submodules, gitmodule)
-		}
+
+		for _, gitmodule := range missing_submodules {
+
+			Info("Adding "+gitmodule.Repo)
+			bash.SubmoduleAdd(gitmodule.Repo, gitmodule.Dest, gitmodule.Name)
+	    }
+
+	    if len(missing_submodules) != 0 {
+	    	bash.SubmoduleUpdate()
+	    }
 	}
-
-	for _, gitmodule := range missing_submodules {
-
-		Info("Adding "+gitmodule.Repo)
-		bash.SubmoduleAdd(gitmodule.Repo, gitmodule.Dest, gitmodule.Name)
-    }
 }
 
 func init() {

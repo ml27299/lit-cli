@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"path/filepath"
+	"os"
 	"github.com/spf13/cobra"
 	. "../helpers"
 	"../helpers/paths"
@@ -43,14 +45,24 @@ func addRun(cmd *cobra.Command, args []string) {
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
-	info, err  := parser.Config()
+	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
 
-	links, err := info.GetLinks()
-	CheckIfError(err)
+	for _, config_file := range config_files {
 
-	err = UpdateGitignore(dir, links)
-	CheckIfError(err)
+		config_file_dir := filepath.Dir(config_file)
+		err = os.Chdir(config_file_dir)
+		CheckIfError(err)
+
+		info, err := parser.ConfigViaPath(config_file_dir)
+		CheckIfError(err)
+
+		links, err := info.GetLinks()
+		CheckIfError(err)
+
+		err = UpdateGitignore(config_file_dir, links)
+		CheckIfError(err)
+	}
 
 	if submodule != "" {
 		
