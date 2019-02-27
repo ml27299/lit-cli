@@ -49,8 +49,8 @@ func Link(link parser.Link) {
 			os.Link(link.Source, link.Dest)
 
 		}else {
-			os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
-			os.Link(link.Source, link.Dest)
+			// os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
+			// os.Link(link.Source, link.Dest)
 		}
 	} else {
 
