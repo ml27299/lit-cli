@@ -27,6 +27,28 @@ var pullCmd = &cobra.Command{
 
 func pullRun(cmd *cobra.Command, args []string) {
 
+	pull := func(dir string, submodules Modules) {
+    	for i := 0; i < len(submodules); i++ {
+
+			status, err := submodules[i].Status()
+			CheckIfError(err)
+
+			if interactive {
+				command, err := prompt.PromptForInteractive(args, submodules[i])
+				CheckIfError(err)
+
+				err = bash.PullViaBash(dir+"/"+*&status.Path, command)
+				CheckIfError(err)
+
+				continue
+			}
+
+			Info("Entering "+*&status.Path+"...")
+			err = bash.Pull(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+		}
+    }
+
 	for index, arg := range pullBoolArgIndexMap {
 		pullBoolArgIndexMap[index] = arg.SetValue(pullBoolArgs[index])
 	}
@@ -51,31 +73,17 @@ func pullRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		pull(dir, submodules)
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Pull(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 
 		return 
 	}
 
-	for i := 0; i < len(submodules); i++ {
-
-		status, err := submodules[i].Status()
-		CheckIfError(err)
-
-		if interactive {
-			command, err := prompt.PromptForInteractive(args, submodules[i])
-			CheckIfError(err)
-
-			err = bash.PullViaBash(dir+"/"+*&status.Path, command)
-			CheckIfError(err)
-
-			continue
-		}
-
-		Info("Entering "+*&status.Path+"...")
-		err = bash.Pull(dir+"/"+*&status.Path, args)
-		CheckIfError(err)
-	}
+	pull(dir, submodules)
 
 	Info("Entering /...")
 	err = bash.Pull(dir+"/", args)

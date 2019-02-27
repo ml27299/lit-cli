@@ -26,6 +26,28 @@ var checkoutCmd = &cobra.Command{
 
 func checkoutRun(cmd *cobra.Command, args []string) {
 
+	checkout := func(dir string, submodules Modules) {
+    	for i := 0; i < len(submodules); i++ {
+
+			status, err := submodules[i].Status()
+			CheckIfError(err)
+
+			if interactive {
+				command, err := prompt.PromptForInteractive(args, submodules[i])
+				CheckIfError(err)
+
+				err = bash.CheckoutViaBash(dir+"/"+*&status.Path, command)
+				CheckIfError(err)
+
+				continue
+			}
+
+			Info("Entering "+*&status.Path+"...")
+			err = bash.Checkout(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+		}
+    }
+
 	for index, arg := range checkoutBoolArgIndexMap {
 		arg.SetValue(checkoutBoolArgs[index])
 	}
@@ -50,31 +72,17 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		checkout(dir, submodules)
+
+		Info("Entering "+*&status.Path+"...")
 		err = bash.Checkout(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 
 		return 
 	}
 
-	for i := 0; i < len(submodules); i++ {
-
-		status, err := submodules[i].Status()
-		CheckIfError(err)
-
-		if interactive {
-			command, err := prompt.PromptForInteractive(args, submodules[i])
-			CheckIfError(err)
-
-			err = bash.CheckoutViaBash(dir+"/"+*&status.Path, command)
-			CheckIfError(err)
-
-			continue
-		}
-
-		Info("Entering "+*&status.Path+"...")
-		err = bash.Checkout(dir+"/"+*&status.Path, args)
-		CheckIfError(err)
-	}
+	checkout(dir, submodules)
 
 	Info("Entering /...")
 	err = bash.Checkout(dir, args)
