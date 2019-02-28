@@ -10,6 +10,7 @@ import (
 	"os"
 )
 
+var branch string
 var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "initializes/adds submodules and hard links file(s)",
@@ -19,6 +20,18 @@ var buildCmd = &cobra.Command{
 }
 
 func buildRun(cmd *cobra.Command, args []string) {
+
+	checkout := func(dir string, submodules Modules) {
+    	for i := 0; i < len(submodules); i++ {
+
+			status, err := submodules[i].Status()
+			CheckIfError(err)
+
+			Info("Entering "+*&status.Path+"...")
+			err = bash.Checkout(dir+"/"+*&status.Path, []string{branch})
+			CheckIfError(err)
+		}
+    }
 
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
@@ -72,8 +85,13 @@ func buildRun(cmd *cobra.Command, args []string) {
 	    	bash.SubmoduleUpdate()
 	    }
 	}
+
+	submodules, err = GetSubmodules(dir)
+	CheckIfError(err)
+	checkout(dir, submodules)
 }
 
 func init() {
+	buildCmd.Flags().StringVarP(&branch, "branch", "b", "master", "")
 	rootCmd.AddCommand(buildCmd)
 }
