@@ -88,10 +88,15 @@ func buildRun(cmd *cobra.Command, args []string) {
 
 	submodules, err = GetSubmodules(dir)
 	CheckIfError(err)
-	checkout(dir, submodules)
+
+	if branch != ""{
+		checkout(dir, submodules)
+	}else {
+		Warning("Didnt supply a branch name (-b), be sure to use a concrete branch name or else the submodules within an application can get out of sync")
+	}
 }
 
 func init() {
-	buildCmd.Flags().StringVarP(&branch, "branch", "b", "master", "")
+	buildCmd.Flags().StringVarP(&branch, "branch", "b", "", "")
 	rootCmd.AddCommand(buildCmd)
 }
