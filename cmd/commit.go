@@ -28,6 +28,34 @@ var commitCmd = &cobra.Command{
 }
 
 func commitRun(cmd *cobra.Command, args []string) {
+	commit := func(dir string, submodules Modules) {
+    	for i := 0; i < len(submodules); i++ {
+
+			status, err := submodules[i].Status()
+			CheckIfError(err)
+
+			changes, err := bash.HasCommitChanges(dir+"/"+*&status.Path)
+			CheckIfError(err)
+			if !changes {
+				Info("Entering "+*&status.Path+"...")
+				continue
+			}
+
+			if interactive {
+				command, err := prompt.PromptForInteractive(args, submodules[i])
+				CheckIfError(err)
+
+				err = bash.CommitViaBash(dir+"/"+*&status.Path, command)
+				CheckIfError(err)
+
+				continue
+			}
+
+			Info("Entering "+*&status.Path+"...")
+			err = bash.Commit(dir+"/"+*&status.Path, args)
+			CheckIfError(err)
+		}
+    }
 
 	for index, arg := range commitBoolArgIndexMap {
 		commitBoolArgIndexMap[index] = arg.SetValue(commitBoolArgs[index])
@@ -72,40 +100,16 @@ func commitRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		commit(dir, submodules)
+		
 		err = bash.Commit(dir+"/"+*&status.Path, args)
 		CheckIfError(err)
 
 		return 
 	}
 
-	for i := 0; i < len(submodules); i++ {
-
-		status, err := submodules[i].Status()
-		CheckIfError(err)
-
-		changes, err := bash.HasCommitChanges(dir+"/"+*&status.Path)
-		CheckIfError(err)
-		if !changes {
-			Info("Entering "+*&status.Path+"...")
-			continue
-		}
-
-		if interactive {
-
-			command, err := prompt.PromptForInteractive(args, submodules[i])
-			CheckIfError(err)
-
-			err = bash.CommitViaBash(dir+"/"+*&status.Path, command)
-			CheckIfError(err)
-
-			continue
-		}
-
-		Info("Entering "+*&status.Path+"...")
-		err = bash.Commit(dir+"/"+*&status.Path, args)
-		CheckIfError(err)
-	}
-	
+	commit(dir, submodules)
 	Info("Entering /...")
 	err = bash.Commit(dir, args)
 	CheckIfError(err)
