@@ -26,7 +26,7 @@ var commitCmd = &cobra.Command{
 	Long: `ex. lit commit -am "my commit message"`,
 	Run: commitRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, "silent"))
+		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 	},
 }
 

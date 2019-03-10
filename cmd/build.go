@@ -17,7 +17,7 @@ var buildCmd = &cobra.Command{
 	Long: `ex. lit build`,
 	Run: buildRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, "silent"))
+		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 		linkRun(cmd, args)
 	},
 }

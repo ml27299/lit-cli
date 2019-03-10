@@ -13,20 +13,29 @@ var updateCmd = &cobra.Command{
 	Run: updateRun,
 }
 
+var (
+	update_silent = false
+	update_prompt = false	
+)
+
 func updateRun(cmd *cobra.Command, args []string) {
 		
-	var SilenceUsage = false
 	for _, val := range args {
 		if val == "silent" {
-			SilenceUsage = true
+			update_silent = true
+		}
+
+		if val == "prompt" {
+			update_prompt = true
 		}
 	}
-	
-	err := version.CheckForUpdate(SilenceUsage)
+
+	err := version.CheckForUpdate(update_silent, update_prompt)
 	CheckIfError(err)
 }
 
 func init() {
 	rootCmd.AddCommand(updateCmd)
-	updateCmd.PersistentFlags().String("foo", "", "A help for foo")
+	updateCmd.Flags().BoolVarP(&update_prompt, "prompt", "p", false, "Will prompt if you want to update, not automatic")
+	updateCmd.Flags().BoolVarP(&update_silent, "silent", "s", false, "Will not show any logs unless there is an update availiable")
 }

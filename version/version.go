@@ -45,7 +45,7 @@ func RunLatestUpdate() error {
 	return nil
 }
 
-func CheckForUpdate(silent bool) error {
+func CheckForUpdate(silent, do_prompt bool) error {
 	version := CurrVersion
 
 	if !isValidVersion(version) {
@@ -79,25 +79,32 @@ func CheckForUpdate(silent bool) error {
 
 	if latestTag > currentTag {
 
-		if silent {
-			fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
-			fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
-		}
+		if do_prompt {
+			if silent {
+				fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
+				fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
+			}
 
-		fmt.Println("There is a more recent version of the Lit CLI available.")
-		str, err := prompt.PromptForUpdate()
-		if err != nil {
-			return err
-		}
+			fmt.Println("There is a more recent version of the Lit CLI available.")
+			str, err := prompt.PromptForUpdate()
+			if err != nil {
+				return err
+			}
 
-		if str == "yes" || str == "y" {
+			if str == "yes" || str == "y" {
+				err = RunLatestUpdate()
+				if err != nil {
+					return err
+				}
+			}else {
+				fmt.Println("Its recomended to be up to date, you can always manually update with the command below")
+				fmt.Println("curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash")
+			}
+		}else {
 			err = RunLatestUpdate()
 			if err != nil {
 				return err
 			}
-		}else {
-			fmt.Println("Its recomended to be up to date, you can always manually update with the command below")
-			fmt.Println("curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash")
 		}
 
 	} else if !silent {
