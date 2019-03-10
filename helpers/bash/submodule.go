@@ -2,7 +2,7 @@ package bash
 import (
 	"os"
 	"os/exec"
-	"../paths"
+	"github.com/ml27299/helpers/paths"
 	//"fmt"
 )
 

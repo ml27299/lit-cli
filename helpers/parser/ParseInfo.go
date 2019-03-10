@@ -2,7 +2,7 @@ package parser
 import(
 	//"fmt"
 	"strings"
-	"../paths"
+	"github.com/ml27299/helpers/paths"
 )
 
 type ParseInfo struct {

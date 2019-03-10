@@ -3,9 +3,9 @@ import(
 	"github.com/chzyer/readline"
 	"fmt"
 	"strconv"
-	. "../../helpers"
+	. "github.com/ml27299/helpers"
 	"strings"
-	"../paths"
+	"github.com/ml27299/helpers/paths"
 	//"gopkg.in/src-d/go-git.v4"
 )
 

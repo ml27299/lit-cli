@@ -3,10 +3,10 @@ package cmd
 import (
 	"os"
 	"github.com/spf13/cobra"
-	"../helpers/parser"
-	. "../helpers"
-	"../helpers/paths"
-	"../helpers/prompt"
+	"github.com/ml27299/helpers/parser"
+	. "github.com/ml27299/helpers"
+	"github.com/ml27299/helpers/paths"
+	"github.com/ml27299/helpers/prompt"
 	"path/filepath"
 	"strings"
 )

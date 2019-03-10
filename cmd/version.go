@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"../version"
+	"github.com/ml27299/version"
 	"github.com/spf13/cobra"
 )
+
 
 var (
 	versionCmd = &cobra.Command{

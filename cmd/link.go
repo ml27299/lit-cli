@@ -4,9 +4,9 @@ import (
 	"os"
 	"io"
 	"github.com/spf13/cobra"
-	"../helpers/parser"
-	"../helpers/paths"
-	. "../helpers"
+	"github.com/ml27299/helpers/parser"
+	"github.com/ml27299/helpers/paths"
+	. "github.com/ml27299/helpers"
 	"path/filepath"
 )
 

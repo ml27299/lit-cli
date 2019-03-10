@@ -3,7 +3,7 @@ package parser
 import(
 	"strings"
 	"path/filepath"
-	"../paths"
+	"github.com/ml27299/helpers/paths"
 )
 
 type LinkItem struct {

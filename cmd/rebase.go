@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	. "../helpers"
-	"../helpers/paths"
-	"../helpers/bash"
-	Args "../helpers/args"
-	"../helpers/prompt"
+	. "github.com/ml27299/helpers"
+	"github.com/ml27299/helpers/paths"
+	"github.com/ml27299/helpers/bash"
+	Args "github.com/ml27299/helpers/args"
+	"github.com/ml27299/helpers/prompt"
 )
 
 var (
