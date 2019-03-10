@@ -33,7 +33,7 @@ func RunLatestUpdate() error {
 
 	install_script_path := "https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh"
 	
-	cmd := exec.Command("sh", "-c", "curl "+install_script_path+" | sudo bash")
+	cmd := exec.Command("sh", "-c", "curl -s "+install_script_path+" | sudo bash")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -83,7 +83,7 @@ func CheckForUpdate(silent bool) error {
 			fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
 			fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
 		}
-		
+
 		fmt.Println("There is a more recent version of the Lit CLI available.")
 		str, err := prompt.PromptForUpdate()
 		if err != nil {
