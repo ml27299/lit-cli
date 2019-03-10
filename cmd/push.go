@@ -22,7 +22,7 @@ var pushCmd = &cobra.Command{
 	Short: DocRoot+"/"+pushSlug,
 	Long: `ex. lit push origin master`,
 	Run: pushRun,
-	PostRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 	},
 }

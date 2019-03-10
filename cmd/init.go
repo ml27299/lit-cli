@@ -14,7 +14,7 @@ var initCmd = &cobra.Command{
 	Short: "initializes a project, requires a lit.config.json",
 	Long: `ex. lit init`,
 	Run: initRun,
-	PostRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 	},
 }

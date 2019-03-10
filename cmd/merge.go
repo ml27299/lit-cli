@@ -22,8 +22,10 @@ var mergeCmd = &cobra.Command{
 	Short: DocRoot+"/"+mergeSlug,
 	Long: `ex. lit merge master`,
 	Run: mergeRun,
-	PostRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
+	},
+	PostRun: func(cmd *cobra.Command, args []string) {
 		linkRun(cmd, args)
 	},
 }

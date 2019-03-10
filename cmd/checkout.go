@@ -22,7 +22,7 @@ var checkoutCmd = &cobra.Command{
 	Short:  DocRoot+"/"+checkoutSlug,
 	Long: `ex. lit checkout master`,
 	Run: checkoutRun,
-	PostRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 	},
 }
