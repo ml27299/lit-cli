@@ -5,7 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 var (
 	versionCmd = &cobra.Command{
 		Use:   "version",
@@ -30,7 +29,6 @@ func init() {
 func printVersion(cmd *cobra.Command, args []string) error {
 	// Silence Usage as we have now validated command input
 	cmd.SilenceUsage = true
-
 	err := version.PrintVersion()
 	if err != nil {
 		return err
