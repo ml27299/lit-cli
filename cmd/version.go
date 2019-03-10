@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/ml27299/version"
+	"github.com/ml27299/lit-cli/version"
 	"github.com/spf13/cobra"
 )
 
