@@ -16,6 +16,9 @@ var touchCmd = &cobra.Command{
 	Short: "creates a file and hard links it to the correspoding git module",
 	Long: `ex. lit touch ./path/to/somefile.txt`,
 	Run: touchRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func CreateAndLink(source string, items []parser.LinkItem, args []string) error {

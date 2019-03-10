@@ -9,6 +9,35 @@ import(
 	//"gopkg.in/src-d/go-git.v4"
 )
 
+func PromptForUpdate() (string, error) {
+	var response string
+
+	Info("Would you like to update the cli to the latest version?")
+	rl, err := readline.New("> ")
+	if err != nil {
+		panic(err)
+	}
+	defer rl.Close()
+
+	for {
+		response, err = rl.Readline()
+		if err != nil {
+			break
+		}
+
+		str := strings.TrimSpace(strings.ToLower(response))
+		if err != nil {
+			fmt.Println(err.Error())
+		} else if str == "y" || str == "n" || str == "yes" || str == "no" {
+			break
+		}else {
+			fmt.Println("Please enter Yy/Nn or yes/no")
+		}
+	}
+
+	return response, nil
+}
+
 func PromptForInteractive(args []string, submodule *Module) (string, error) {
 	var response string
 

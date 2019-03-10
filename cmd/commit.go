@@ -25,6 +25,9 @@ var commitCmd = &cobra.Command{
 	Short:  DocRoot+"/"+commitSlug,
 	Long: `ex. lit commit -am "my commit message"`,
 	Run: commitRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func commitRun(cmd *cobra.Command, args []string) {

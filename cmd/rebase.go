@@ -22,6 +22,9 @@ var rebaseCmd = &cobra.Command{
 	Short:  DocRoot+"/"+rebaseSlug,
 	Long: `ex. lit rebase`,
 	Run: rebaseRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func rebaseRun(cmd *cobra.Command, args []string) {

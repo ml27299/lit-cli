@@ -1,10 +1,13 @@
 package version
 
 import (
+	"os"
+	"os/exec"
 	"errors"
 	"fmt"
 
 	"github.com/ml27299/lit-cli/helpers/github"
+	"github.com/ml27299/lit-cli/helpers/prompt"
 )
 
 var (
@@ -23,6 +26,22 @@ func PrintVersion() error {
 
 	fmt.Printf("Current Version: %s"+"\n", version)
 	fmt.Printf("Current Commit: %s"+"\n", gitCommit)
+	return nil
+}
+
+func RunLatestUpdate() error {
+
+	install_script_path := "https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh"
+	
+	cmd := exec.Command("sh", "-c", "curl "+install_script_path+" | sudo bash")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -57,8 +76,23 @@ func CheckForUpdate() error {
 	fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
 
 	if latestTag > currentTag {
+
 		fmt.Println("There is a more recent version of the Lit CLI available.")
-		fmt.Println("curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash")
+		str, err := prompt.PromptForUpdate()
+		if err != nil {
+			return err
+		}
+
+		if str == "yes" || str == "y" {
+			err = RunLatestUpdate()
+			if err != nil {
+				return err
+			}
+		}else {
+			fmt.Println("Its recomended to be up to date, you can always manually update with the command below")
+			fmt.Println("curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash")
+		}
+
 	} else {
 		fmt.Println("Running latest version")
 	}

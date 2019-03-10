@@ -15,6 +15,9 @@ var linkCmd = &cobra.Command{
 	Short: "hard links files from a directory, requires a lit.config.json",
 	Long: `ex. lit link`,
 	Run: linkRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func Copy(src string, dst string) (int64, error) {

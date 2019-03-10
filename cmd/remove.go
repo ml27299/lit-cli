@@ -20,6 +20,9 @@ var removeCmd = &cobra.Command{
 	Short: "removes a submodule from a project",
 	Long: `ex. lit remove {{submodule.name || submodule.path}}`,
 	Run: removeRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func removeRun(cmd *cobra.Command, args []string) {

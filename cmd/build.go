@@ -16,7 +16,10 @@ var buildCmd = &cobra.Command{
 	Short: "initializes/adds submodules and hard links file(s)",
 	Long: `ex. lit build`,
 	Run: buildRun,
-	PostRun: linkRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+		linkRun(cmd, args)
+	},
 }
 
 func buildRun(cmd *cobra.Command, args []string) {

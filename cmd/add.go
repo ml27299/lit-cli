@@ -25,6 +25,9 @@ var addCmd = &cobra.Command{
 	Short: DocRoot+"/"+addSlug,
 	Long: `ex. lit add .`,
 	Run: addRun,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		updateRun(cmd, args)
+	},
 }
 
 func addRun(cmd *cobra.Command, args []string) {
