@@ -15,9 +15,14 @@ var updateCmd = &cobra.Command{
 
 func updateRun(cmd *cobra.Command, args []string) {
 		
-	cmd.SilenceUsage = true
-	err := version.CheckForUpdate()
-
+	var SilenceUsage = false
+	for _, val := range args {
+		if val == "silent" {
+			SilenceUsage = true
+		}
+	}
+	
+	err := version.CheckForUpdate(SilenceUsage)
 	CheckIfError(err)
 }
 

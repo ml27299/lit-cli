@@ -26,7 +26,7 @@ var addCmd = &cobra.Command{
 	Long: `ex. lit add .`,
 	Run: addRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, args)
+		updateRun(cmd, append(args, "silent"))
 	},
 }
 

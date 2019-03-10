@@ -15,7 +15,7 @@ var initCmd = &cobra.Command{
 	Long: `ex. lit init`,
 	Run: initRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, args)
+		updateRun(cmd, append(args, "silent"))
 	},
 }
 

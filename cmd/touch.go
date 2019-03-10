@@ -17,7 +17,7 @@ var touchCmd = &cobra.Command{
 	Long: `ex. lit touch ./path/to/somefile.txt`,
 	Run: touchRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, args)
+		updateRun(cmd, append(args, "silent"))
 	},
 }
 

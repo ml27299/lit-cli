@@ -16,7 +16,7 @@ var linkCmd = &cobra.Command{
 	Long: `ex. lit link`,
 	Run: linkRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, args)
+		updateRun(cmd, append(args, "silent"))
 	},
 }
 

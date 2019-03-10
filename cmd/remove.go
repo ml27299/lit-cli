@@ -21,7 +21,7 @@ var removeCmd = &cobra.Command{
 	Long: `ex. lit remove {{submodule.name || submodule.path}}`,
 	Run: removeRun,
 	PostRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, args)
+		updateRun(cmd, append(args, "silent"))
 	},
 }
 

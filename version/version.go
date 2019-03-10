@@ -45,7 +45,7 @@ func RunLatestUpdate() error {
 	return nil
 }
 
-func CheckForUpdate() error {
+func CheckForUpdate(silent bool) error {
 	version := CurrVersion
 
 	if !isValidVersion(version) {
@@ -72,11 +72,18 @@ func CheckForUpdate() error {
 	latestPub := latestTagResp.PublishedAt.Format("2006.01.02")
 	latestTag := latestTagResp.TagName
 
-	fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
-	fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
+	if !silent {
+		fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
+		fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
+	}
 
 	if latestTag > currentTag {
 
+		if silent {
+			fmt.Printf("Current Version: %s %s"+"\n", currentTag, currentPub)
+			fmt.Printf("Latest Version: %s %s"+"\n", latestTag, latestPub)
+		}
+		
 		fmt.Println("There is a more recent version of the Lit CLI available.")
 		str, err := prompt.PromptForUpdate()
 		if err != nil {
@@ -93,7 +100,7 @@ func CheckForUpdate() error {
 			fmt.Println("curl https://raw.githubusercontent.com/ml27299/lit-cli/master/install.sh | sudo bash")
 		}
 
-	} else {
+	} else if !silent {
 		fmt.Println("Running latest version")
 	}
 
