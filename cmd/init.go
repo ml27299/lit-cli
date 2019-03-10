@@ -3,10 +3,10 @@ package cmd
 import (
 	"os"
 	"github.com/spf13/cobra"
-	. "github.com/ml27299/helpers"
+	. "github.com/ml27299/lit-cli/helpers"
 	"gopkg.in/src-d/go-git.v4"
-	"github.com/ml27299/helpers/paths"
-	"github.com/ml27299/helpers/resources"
+	"github.com/ml27299/lit-cli/helpers/paths"
+	"github.com/ml27299/lit-cli/helpers/resources"
 )
 
 var initCmd = &cobra.Command{

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ml27299/helpers/httputil"
+	"github.com/ml27299/lit-cli/helpers/httputil"
 	"github.com/pkg/errors"
 )
 

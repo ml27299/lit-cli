@@ -4,7 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"github.com/spf13/cobra"
-	. "github.com/ml27299/helpers"
+	. "github.com/ml27299/lit-cli/helpers"
 )
 
 var updateCmd = &cobra.Command{

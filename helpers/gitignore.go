@@ -6,8 +6,8 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"github.com/ml27299/helpers/resources"
-	"github.com/ml27299/helpers/parser"
+	"github.com/ml27299/lit-cli/helpers/resources"
+	"github.com/ml27299/lit-cli/helpers/parser"
 )
 
 func UpdateGitignore(path string, links []parser.Link) error {

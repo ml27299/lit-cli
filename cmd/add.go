@@ -4,12 +4,12 @@ import (
 	"path/filepath"
 	"os"
 	"github.com/spf13/cobra"
-	. "github.com/ml27299/helpers"
-	"github.com/ml27299/helpers/paths"
-	"github.com/ml27299/helpers/bash"
-	"github.com/ml27299/helpers/parser"
-	Args "github.com/ml27299/helpers/args"
-	"github.com/ml27299/helpers/prompt"
+	. "github.com/ml27299/lit-cli/helpers"
+	"github.com/ml27299/lit-cli/helpers/paths"
+	"github.com/ml27299/lit-cli/helpers/bash"
+	"github.com/ml27299/lit-cli/helpers/parser"
+	Args "github.com/ml27299/lit-cli/helpers/args"
+	"github.com/ml27299/lit-cli/helpers/prompt"
 )
 
 var (

@@ -2,7 +2,7 @@ package parser
 import(
 	"fmt"
 	"io/ioutil"
-	"github.com/ml27299/helpers/paths"
+	"github.com/ml27299/lit-cli/helpers/paths"
 	"bytes"
 	"strings"
 	"os"
