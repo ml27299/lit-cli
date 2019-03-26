@@ -15,7 +15,7 @@ import (
 var (
 	addSlug = "git-add"
 	addStringArgs [1]string
-	addBoolArgs [18]bool
+	addBoolArgs [17]bool
 	addStringArgIndexMap = make(map[int]Args.StringArg)
 	addBoolArgIndexMap = make(map[int]Args.BoolArg)
 )
@@ -142,7 +142,6 @@ func init() {
 	addBoolArgIndexMap[14] = Args.BoolArg{ Long: "ignore-missing", Short: "" } 
 	addBoolArgIndexMap[15] = Args.BoolArg{ Long: "no-warn-embedded-repo", Short: "" } 
 	addBoolArgIndexMap[16] = Args.BoolArg{ Long: "renormalize", Short: "" } 
-	addBoolArgIndexMap[17] = Args.BoolArg{ Long: "interactive", Short: "i" } 
 
 	for index, val := range addBoolArgIndexMap {
 		addCmd.Flags().BoolVarP(&addBoolArgs[index], val.Long, val.Short, false, DocRoot+"/"+addSlug+"#"+addSlug+"-"+val.Long)
