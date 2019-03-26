@@ -15,6 +15,7 @@ func Push(path string, args []string) error {
     args = append([]string{"push"}, args...)
     cmd := exec.Command("git", args...)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -41,6 +42,7 @@ func PushViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git push "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

@@ -9,7 +9,8 @@ import (
 func SubmoduleAdd(repo, dest string, name string) error {
 
 	cmd := exec.Command("git", "submodule", "add", "-f", "--name", name, repo, dest)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err := cmd.Run()
@@ -24,7 +25,8 @@ func SubmoduleAdd(repo, dest string, name string) error {
 func SubmoduleUpdate() error {
 
 	cmd := exec.Command("git", "submodule", "update", "--init", "--recursive")
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err := cmd.Run()
@@ -55,7 +57,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 		cmd_str = "git config -f "+dir+"/"+ext+"/.gitmodules --remove-section submodule."+name
 	}
 	cmd := exec.Command("sh", "-c", cmd_str)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()
@@ -64,7 +67,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 	}
 
 	cmd = exec.Command("sh", "-c", "git add .gitmodules")
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()
@@ -77,7 +81,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 		cmd_str = "git config -f "+dir+"/.git/modules/"+ext+"/config --remove-section submodule."+name
 	}
 	cmd = exec.Command("sh", "-c", cmd_str)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()
@@ -86,7 +91,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 	}
 
 	cmd = exec.Command("git", "rm", "-rf", "--cached", path)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()
@@ -99,7 +105,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 		cmd_str = dir+"/.git/modules/"+ext+"/modules/"+name
 	}
 	cmd = exec.Command("rm", "-rf", cmd_str)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()
@@ -112,7 +119,8 @@ func SubmoduleRemove(name, path string, ext string) error {
 	}
 
 	cmd = exec.Command("rm", "-rf", "./"+path)
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+    cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err = cmd.Run()

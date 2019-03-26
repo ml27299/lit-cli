@@ -16,6 +16,7 @@ func Status(path string, args []string) error {
     args = append([]string{"status"}, args...)
     cmd := exec.Command("git", args...)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -42,6 +43,7 @@ func StatusViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git status "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

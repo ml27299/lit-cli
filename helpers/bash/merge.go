@@ -15,6 +15,7 @@ func Merge(path string, args []string) error {
     args = append([]string{"merge"}, args...)
     cmd := exec.Command("git", args...)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -41,6 +42,7 @@ func MergeViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git merge "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

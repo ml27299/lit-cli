@@ -15,6 +15,7 @@ func Add(path string, args []string) error {
     args = append([]string{"add"}, args...)
     cmd := exec.Command("git", args...)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -41,6 +42,7 @@ func AddViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git add "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

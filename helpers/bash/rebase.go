@@ -15,6 +15,7 @@ func Rebase(path string, args []string) error {
     args = append([]string{"rebase"}, args...)
     cmd := exec.Command("git", args...)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -41,6 +42,7 @@ func RebaseViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git rebase "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
