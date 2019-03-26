@@ -163,7 +163,7 @@ func init() {
 	commitBoolArgIndexMap[21] = Args.BoolArg{ Long: "status", Short: "" } 
 	commitBoolArgIndexMap[22] = Args.BoolArg{ Long: "no-status", Short: "" }
 	commitBoolArgIndexMap[23] = Args.BoolArg{ Long: "no-gpg-sign", Short: "" } 
-	commitBoolArgIndexMap[24] = Args.BoolArg{ Long: "interactive", Short: "i" } 
+	commitBoolArgIndexMap[24] = Args.BoolArg{ Long: "interactive", Short: "" } 
 	
 	for index, val := range commitBoolArgIndexMap {
 		commitCmd.Flags().BoolVarP(&commitBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+commitSlug+"#"+commitSlug+"-"+val.Long)
