@@ -38,9 +38,11 @@ func Commit(path string, args []string) error {
         return err
     }
 
+
     args = append([]string{"commit"}, args...)
     cmd := exec.Command("git", args...)
 
+	cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -58,6 +60,7 @@ func Commit(path string, args []string) error {
 }
 
 func CommitViaBash(path string, args string) error {	
+	println("fvdfvdfvdfvfd!!!")
 	current_path, err := os.Getwd()
 	err = os.Chdir(path)
 
@@ -67,6 +70,7 @@ func CommitViaBash(path string, args string) error {
 
     cmd := exec.Command("sh", "-c", "git commit "+args)
 
+    cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
