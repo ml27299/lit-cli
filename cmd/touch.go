@@ -19,6 +19,9 @@ var touchCmd = &cobra.Command{
 	PreRun: func(cmd *cobra.Command, args []string) {
 		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
 	},
+	PostRun: func(cmd *cobra.Command, args []string) {
+		linkRun(cmd, args)
+	},
 }
 
 func CreateAndLink(source string, items []parser.LinkItem, args []string) error {

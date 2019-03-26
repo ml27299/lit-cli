@@ -18,29 +18,6 @@ func HasCommitChanges(path string) (bool, error) {
 		return false, err
 	}
 
-	// if string(has_changes[:]) == "" {
-	// 	has_changes, err = exec.Command("git", "diff", "--cache", "--exit-code").Output()
-	// 	if err != nil && err.Error() != "exit status 1" {
-	// 		return false, err
-	// 	}
-	// }
-
-	// if string(has_changes[:]) == "" {
-
-	// 	untracked_files, err := exec.Command("git", "ls-files", "--other", "--exclude-standard", "--directory").Output()
-	// 	if err != nil && err.Error() != "exit status 1" {
-	// 		return false, err
-	// 	}
-
-	// 	if string(untracked_files[:]) == "" {
-	// 		return false, nil
-	// 	}
-
-	// 	fmt.Println("Untacked files...")
-	// 	fmt.Println(string(untracked_files))
-	// 	return false, nil
-	// }
-
 	err = os.Chdir(current_path)
 	if err != nil {
 		return false, err
