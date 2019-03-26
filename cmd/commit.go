@@ -15,7 +15,7 @@ import (
 var (
 	commitSlug = "git-commit"
 	commitStringArgs [12]string
-	commitBoolArgs [24]bool
+	commitBoolArgs [25]bool
 	commitStringArgIndexMap = make(map[int]Args.StringArg)
 	commitBoolArgIndexMap = make(map[int]Args.BoolArg)
 )
@@ -163,6 +163,7 @@ func init() {
 	commitBoolArgIndexMap[21] = Args.BoolArg{ Long: "status", Short: "" } 
 	commitBoolArgIndexMap[22] = Args.BoolArg{ Long: "no-status", Short: "" }
 	commitBoolArgIndexMap[23] = Args.BoolArg{ Long: "no-gpg-sign", Short: "" } 
+	commitBoolArgIndexMap[24] = Args.BoolArg{ Long: "interactive", Short: "i" } 
 	
 	for index, val := range commitBoolArgIndexMap {
 		commitCmd.Flags().BoolVarP(&commitBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+commitSlug+"#"+commitSlug+"-"+val.Long)

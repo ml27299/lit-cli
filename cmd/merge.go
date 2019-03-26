@@ -12,7 +12,7 @@ import (
 var (
 	mergeSlug = "git-merge"
 	mergeStringArgs [6]string
-	mergeBoolArgs [27]bool
+	mergeBoolArgs [28]bool
 	mergeStringArgIndexMap = make(map[int]Args.StringArg)
 	mergeBoolArgIndexMap = make(map[int]Args.BoolArg)
 )
@@ -136,6 +136,7 @@ func init() {
 	mergeBoolArgIndexMap[24] = Args.BoolArg{ Long: "no-rerere-autoupdate", Short: "" } 
 	mergeBoolArgIndexMap[25] = Args.BoolArg{ Long: "abort", Short: "" } 
 	mergeBoolArgIndexMap[26] = Args.BoolArg{ Long: "continue", Short: "" } 
+	mergeBoolArgIndexMap[27] = Args.BoolArg{ Long: "rebase", Short: "r" } 
 
 	for index, val := range mergeBoolArgIndexMap {
 		mergeCmd.Flags().BoolVarP(&mergeBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+mergeSlug+"#"+mergeSlug+"-"+val.Long)

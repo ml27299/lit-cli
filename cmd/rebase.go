@@ -12,7 +12,7 @@ import (
 var (
 	rebaseSlug = "git-rebase"
 	rebaseStringArgs [8]string
-	rebaseBoolArgs [29]bool
+	rebaseBoolArgs [30]bool
 	rebaseStringArgIndexMap = make(map[int]Args.StringArg)
 	rebaseBoolArgIndexMap = make(map[int]Args.BoolArg)
 )
@@ -132,11 +132,12 @@ func init() {
 	rebaseBoolArgIndexMap[21] = Args.BoolArg{ Long: "ignore-date", Short: "" }
 	rebaseBoolArgIndexMap[22] = Args.BoolArg{ Long: "signoff", Short: "" }
 	rebaseBoolArgIndexMap[23] = Args.BoolArg{ Long: "interactive", Short: "i" }
-	rebaseBoolArgIndexMap[24] = Args.BoolArg{ Long: "r", Short: "r" }
+	rebaseBoolArgIndexMap[24] = Args.BoolArg{ Long: "rebase-merges", Short: "r" }
 	rebaseBoolArgIndexMap[25] = Args.BoolArg{ Long: "preserve-merges", Short: "p" }
 	rebaseBoolArgIndexMap[26] = Args.BoolArg{ Long: "root", Short: "" }
 	rebaseBoolArgIndexMap[27] = Args.BoolArg{ Long: "autosquash", Short: "" }
 	rebaseBoolArgIndexMap[28] = Args.BoolArg{ Long: "no-autosquash", Short: "" }
+	rebaseBoolArgIndexMap[29] = Args.BoolArg{ Long: "interactive", Short: "i" }
 
 	for index, val := range rebaseBoolArgIndexMap {
 		rebaseCmd.Flags().BoolVarP(&rebaseBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+rebaseSlug+"#"+rebaseSlug+"-"+val.Long)
