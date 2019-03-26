@@ -60,7 +60,7 @@ func Commit(path string, args []string) error {
 }
 
 func CommitViaBash(path string, args string) error {	
-	println("fvdfvdfvdfvfd!!!")
+	
 	current_path, err := os.Getwd()
 	err = os.Chdir(path)
 
