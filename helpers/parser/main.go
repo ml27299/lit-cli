@@ -110,11 +110,6 @@ func ConfigViaPath(dir string) (ParseInfo, error) {
 
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
 		linkItems, err = ConfigLinkItems(dir+"/.litconfig")
-	}else {
-		return response, err
-	}
-
-	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
 		modules, err = ConfigModules(dir+"/.litconfig")
 	}else {
 		return response, err
