@@ -32,10 +32,14 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 	checkout := func(dir string, submodules Modules) {
     	for i := 0; i < len(submodules); i++ {
 
+    		if debug {println("Getting submodule tree")}
 			status, err := submodules[i].Status()
 			CheckIfError(err)
 
+			if debug {println("Checking if interactive")}
 			if interactive {
+
+				if debug {println("Prompting interactive")}
 				command, err := prompt.PromptForInteractive(args, submodules[i])
 				CheckIfError(err)
 
@@ -58,23 +62,29 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 		arg.SetValue(checkoutStringArgs[index])
 	}
 
+	if debug {println("Generating command")}
 	_args := Args.GenerateCommand(checkoutStringArgIndexMap, checkoutBoolArgIndexMap)
 	args = append(_args, args...)
 
+	if debug {println("Finding root directory")}
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 
+	if debug {println("Getting submodules")}
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
 	if submodule != "" {
 		
+		if debug {println("Finding submodule : " + submodule)}
 		_submodule, err := FindSubmodule(submodules, submodule)
 		CheckIfError(err)
 
+		if debug {println("Getting submodule tree")}
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
+		if debug {println("Getting submodules within "+submodule)}
 		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
 		checkout(dir, submodules)
 

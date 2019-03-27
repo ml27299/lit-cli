@@ -27,6 +27,7 @@ var (
 	cfgFile string
 	interactive bool
 	submodule string
+	debug bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -58,6 +59,7 @@ func init() {
 	//rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.project.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&interactive, "inter", false, "Run lit in interactivce mode")
 	rootCmd.PersistentFlags().StringVar(&submodule, "submodule", "", "run a lit command for one submodule")
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "Get a verbose log of whats lit is doing")
 }
 
 

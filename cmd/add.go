@@ -35,10 +35,14 @@ func addRun(cmd *cobra.Command, args []string) {
 	add := func(dir string, submodules Modules) {
     	for i := 0; i < len(submodules); i++ {
 
+    		if debug {println("Getting submodule tree")}
 			status, err := submodules[i].Status()
 			CheckIfError(err)
 
+			if debug {println("Checking if interactive")}
 			if interactive {
+
+				if debug {println("Prompting interactive")}
 				command, err := prompt.PromptForInteractive(args, submodules[i])
 				CheckIfError(err)
 
@@ -61,42 +65,53 @@ func addRun(cmd *cobra.Command, args []string) {
 		addStringArgIndexMap[index] = arg.SetValue(addStringArgs[index])
 	}
 
+	if debug {println("Generating command")}
 	_args := Args.GenerateCommand(addStringArgIndexMap, addBoolArgIndexMap)
 	args = append(_args, args...)
 
+	if debug {println("Finding root directory")}
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 	
+	if debug {println("Getting submodules")}
 	submodules, err := GetSubmodules(dir)
 	CheckIfError(err)
 
+	if debug {println("Finding config files")}
 	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
 
 	for _, config_file := range config_files {
 
+		if debug {println("Getting directory of "+config_file)}
 		config_file_dir := filepath.Dir(config_file)
 		err = os.Chdir(config_file_dir)
 		CheckIfError(err)
 
+		if debug {println("Parsing config file")}
 		info, err := parser.ConfigViaPath(config_file_dir)
 		CheckIfError(err)
 
+		if debug {println("Getting links")}
 		links, err := info.GetLinks()
 		CheckIfError(err)
 
+		if debug {println("Updating .gitignore in "+config_file_dir)}
 		err = UpdateGitignore(config_file_dir, links)
 		CheckIfError(err)
 	}
 
 	if submodule != "" {
 		
+		if debug {println("Finding submodule : " + submodule)}
 		_submodule, err := FindSubmodule(submodules, submodule)
 		CheckIfError(err)
 
+		if debug {println("Getting submodule tree")}
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
+		if debug {println("Getting submodules within "+submodule)}
 		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
 		add(dir, submodules)
 
