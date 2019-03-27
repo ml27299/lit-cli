@@ -4,6 +4,7 @@ import (
 	"strings"
 	"bufio"
 	"io"
+	"sort"
 	"io/ioutil"
 	"os"
 	"github.com/ml27299/lit-cli/helpers/resources"
@@ -38,6 +39,7 @@ func UpdateGitignore(path string, links []parser.Link) error {
 		link_dests = append(link_dests, strings.Replace(link.Dest, path, "", -1))
 	}
 
+	sort.Sort(sort.StringSlice(link_dests))
 	err = generateContent(path+"/.gitignore", link_dests)
 	if err != nil {
 		return err
