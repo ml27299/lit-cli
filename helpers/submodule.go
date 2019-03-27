@@ -182,7 +182,7 @@ func FindSubmodule(submodules Modules, value string) (*Module, error) {
 	}
 
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil && response == nil {
-		modules, err := parser.ConfigModules(dir+"/.litconfig")
+		modules, err := parser.ConfigModules(dir+"/.litconfig", true)
 		for i := 0; i < len(modules); i++ {
 			if modules[i].Name == value {
 				response, err = FindSubmodule(submodules, modules[i].Dest)

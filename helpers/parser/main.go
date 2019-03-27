@@ -1,6 +1,6 @@
 package parser
 import(
-	"fmt"
+	//"fmt"
 	"io/ioutil"
 	"github.com/ml27299/lit-cli/helpers/paths"
 	"bytes"
@@ -9,17 +9,23 @@ import(
 	"github.com/spf13/viper"
 )
 
-func ConfigLinkItems(path string) ([]LinkItem, error) {
-	var response []LinkItem
+func parseFile(path string) error {
 	file_string, err := ioutil.ReadFile(path)	
 	if err != nil {
-		return response, err 
+		return err 
 	}
 
 	viper.SetConfigType("toml")
-	err = viper.ReadConfig(bytes.NewBuffer([]byte(file_string)))
-	if err != nil {
-		return response, nil
+	_ = viper.ReadConfig(bytes.NewBuffer([]byte(file_string)))
+
+	return nil
+}
+
+func ConfigLinkItems(path string, parse bool) ([]LinkItem, error) {
+	var response []LinkItem
+
+	if parse {
+		parseFile(path)
 	}
 
 	var keys []string
@@ -63,18 +69,11 @@ func ConfigLinkItems(path string) ([]LinkItem, error) {
 	return response, nil
 }
 
-func ConfigModules(path string) ([]GitModule, error) {
+func ConfigModules(path string, parse bool) ([]GitModule, error) {
 	var response []GitModule
-	file_string, err := ioutil.ReadFile(path)	
-	if err != nil {
-		return response, err 
-	}
 
-	viper.SetConfigType("toml")
-	err = viper.ReadConfig(bytes.NewBuffer([]byte(file_string)))
-	if err != nil {
-		fmt.Println(err.Error())
-		return response, err
+	if parse {
+		parseFile(path)
 	}
 
 	var keys []string
@@ -109,8 +108,9 @@ func ConfigViaPath(dir string) (ParseInfo, error) {
 	)
 
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
-		linkItems, err = ConfigLinkItems(dir+"/.litconfig")
-		modules, err = ConfigModules(dir+"/.litconfig")
+		parseFile(dir+"/.litconfig")
+		linkItems, err = ConfigLinkItems(dir+"/.litconfig", false)
+		modules, err = ConfigModules(dir+"/.litconfig", false)
 	}else {
 		return response, err
 	}
@@ -137,15 +137,9 @@ func Config() (ParseInfo, error) {
 	)
 
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
-		linkItems, err = ConfigLinkItems(dir+"/.litconfig")
-	}
-
-	if err != nil {
-		return response, err
-	}
-
-	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
-		modules, err = ConfigModules(dir+"/.litconfig")
+		parseFile(dir+"/.litconfig")
+		linkItems, err = ConfigLinkItems(dir+"/.litconfig", false)
+		modules, err = ConfigModules(dir+"/.litconfig", false)
 	}
 
 	if err != nil {
