@@ -83,6 +83,9 @@ func linkRun(cmd *cobra.Command, args []string) {
 		links, err := info.GetLinks()
 		CheckIfError(err)
 		
+		err = UpdateGitignore(config_file_dir, links)
+		CheckIfError(err)
+
 		for _, link := range links {
 			Link(link)
 		}
