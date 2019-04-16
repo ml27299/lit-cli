@@ -22,9 +22,9 @@ var pullCmd = &cobra.Command{
 	Short: DocRoot+"/"+pullSlug,
 	Long: `ex. lit pull origin master`,
 	Run: pullRun,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
-	},
+	// PreRun: func(cmd *cobra.Command, args []string) {
+	// 	updateRun(cmd, append(args, []string{"silent", "prompt"}...))
+	// },
 	PostRun: func(cmd *cobra.Command, args []string) {
 		linkRun(cmd, args)
 	},

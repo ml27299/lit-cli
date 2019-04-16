@@ -16,9 +16,9 @@ var buildCmd = &cobra.Command{
 	Short: "initializes/adds submodules and hard links file(s)",
 	Long: `ex. lit build`,
 	Run: buildRun,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
-	},
+	// PreRun: func(cmd *cobra.Command, args []string) {
+	// 	updateRun(cmd, append(args, []string{"silent", "prompt"}...))
+	// },
 	PostRun: func(cmd *cobra.Command, args []string) {
 		linkRun(cmd, args)
 	},

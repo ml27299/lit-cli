@@ -22,9 +22,9 @@ var statusCmd = &cobra.Command{
 	Short:  DocRoot+"/"+statusSlug,
 	Long: `ex. lit status`,
 	Run: statusRun,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
-	},
+	// PreRun: func(cmd *cobra.Command, args []string) {
+	// 	updateRun(cmd, append(args, []string{"silent", "prompt"}...))
+	// },
 }
 
 func statusRun(cmd *cobra.Command, args []string) {

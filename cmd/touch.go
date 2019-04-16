@@ -16,9 +16,9 @@ var touchCmd = &cobra.Command{
 	Short: "creates a file and hard links it to the correspoding git module",
 	Long: `ex. lit touch ./path/to/somefile.txt`,
 	Run: touchRun,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		updateRun(cmd, append(args, []string{"silent", "prompt"}...))
-	},
+	// PreRun: func(cmd *cobra.Command, args []string) {
+	// 	updateRun(cmd, append(args, []string{"silent", "prompt"}...))
+	// },
 	PostRun: func(cmd *cobra.Command, args []string) {
 		linkRun(cmd, args)
 	},
