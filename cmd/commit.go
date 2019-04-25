@@ -112,9 +112,13 @@ func commitRun(cmd *cobra.Command, args []string) {
 		return 
 	}
 
-	commit(dir, submodules)
 	Info("Entering /...")
 	err = bash.Commit(dir, args)
+	CheckIfError(err)
+
+	commit(dir, submodules)
+
+	err = bash.CommitViaBash(dir, "-am \"updated the commit id on this repo (to keep in sync)\"")
 	CheckIfError(err)
 }
 
