@@ -31,6 +31,8 @@ var commitCmd = &cobra.Command{
 }
 
 func commitRun(cmd *cobra.Command, args []string) {
+	var commited_status_paths []string
+
 	commit := func(dir string, submodules Modules) {
     	for i := 0; i < len(submodules); i++ {
 
@@ -57,6 +59,8 @@ func commitRun(cmd *cobra.Command, args []string) {
 			Info("Entering "+*&status.Path+"...")
 			err = bash.Commit(dir+"/"+*&status.Path, args)
 			CheckIfError(err)
+
+			commited_status_paths = append(commited_status_paths, status.Path)
 		}
     }
 
@@ -118,8 +122,14 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 	commit(dir, submodules)
 
-	err = bash.CommitViaBash(dir, "-am \"updated the commit id on this repo (to keep in sync)\"")
-	CheckIfError(err)
+	if len(commited_status_paths) > 0 {
+		for _, commited_status_path := range commited_status_paths {
+			bash.AddViaBash(dir, commited_status_path)
+		}
+
+		err = bash.CommitViaBash(dir, "-m \"synced the commit id(s)\"")
+		CheckIfError(err)
+	}
 }
 
 func init() {
