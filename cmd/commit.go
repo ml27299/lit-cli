@@ -123,11 +123,13 @@ func commitRun(cmd *cobra.Command, args []string) {
 	commit(dir, submodules)
 
 	if len(commited_status_paths) > 0 {
+
+		Info("Entering /...")
 		for _, commited_status_path := range commited_status_paths {
 			bash.AddViaBash(dir, commited_status_path)
 		}
 
-		err = bash.CommitViaBash(dir, "-m \"synced the commit id(s)\"")
+		err = bash.CommitViaBash(dir, "-m \"synced commit id\"")
 		CheckIfError(err)
 	}
 }

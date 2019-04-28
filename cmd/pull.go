@@ -93,6 +93,19 @@ func pullRun(cmd *cobra.Command, args []string) {
 	Info("Entering /...")
 	err = bash.Pull(dir+"/", args)
 	CheckIfError(err)
+
+	for i := 0; i < len(submodules); i++ {
+		status, err := submodules[i].Status()
+		CheckIfError(err)
+
+		bash.AddViaBash(dir, status.Path)
+	}
+
+	changes, err := bash.HasCommitChanges(dir)
+	CheckIfError(err)
+	if changes {
+		bash.CommitViaBash(dir, "-m \"synced commit id\"")
+	}
 }
 
 func init() {
