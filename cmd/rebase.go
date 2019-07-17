@@ -64,7 +64,7 @@ func rebaseRun(cmd *cobra.Command, args []string) {
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 
-	submodules, err := GetSubmodules(dir)
+	submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
 
 	if submodule != "" {
@@ -75,7 +75,7 @@ func rebaseRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
-		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path, dir)
 		rebase(dir, submodules)
 
 		Info("Entering "+*&status.Path+"...")

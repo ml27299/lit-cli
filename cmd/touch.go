@@ -100,10 +100,10 @@ func touchRun(cmd *cobra.Command, args []string) {
 		err = os.Chdir(config_file_dir)
 		CheckIfError(err)
 
-		info, err := parser.ConfigViaPath(config_file_dir)
+		info, err := parser.ConfigViaPath(config_file_dir, dir)
 		CheckIfError(err)
 	
-		items, err := info.FindMatchingLinkItems(newfilepath)
+		items, err := info.FindMatchingLinkItems(newfilepath, dir)
 		CheckIfError(err)
 		
 		var (

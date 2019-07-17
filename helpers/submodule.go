@@ -60,7 +60,7 @@ func (m *Module) Config() (*ModuleConfig) {
 	}
 }
 
-func GetSubmodules(path string) (Modules, error){
+func GetSubmodules(path string, root_dir string) (Modules, error){
 
 	var response Modules
 	repo, err := git.PlainOpen(path)
@@ -68,10 +68,10 @@ func GetSubmodules(path string) (Modules, error){
 		return response, err
 	}
 
-	root_dir, err := paths.FindRootDir()
-	if err != nil {
-		return response, err
-	}
+	// root_dir, err := paths.FindRootDir()
+	// if err != nil {
+	// 	return response, err
+	// }
 
 	worktree, err := repo.Worktree()
 	if err != nil {
@@ -96,7 +96,7 @@ func GetSubmodules(path string) (Modules, error){
 			Submodule: submodule,
 		})
 
-		modules, err := GetSubmodules(path+"/"+submodule_config.Path)
+		modules, err := GetSubmodules(path+"/"+submodule_config.Path, root_dir)
 		if err != nil {
 			return response, err
 		}

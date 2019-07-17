@@ -13,7 +13,7 @@ type LinkItem struct {
 	RemoveSources []string
 }
 
-func (l *LinkItem) Filter(sources []string) ([]string, error){
+func (l *LinkItem) Filter(sources []string, root_dir string) ([]string, error){
 	var response []string
 
 	for _, source := range sources {
@@ -21,7 +21,7 @@ func (l *LinkItem) Filter(sources []string) ([]string, error){
 		found := false
 		for _, rm_source := range l.RemoveSources {
 
-			rm_source, err := paths.Normalize(rm_source)
+			rm_source, err := paths.NormalizeWithRoot(rm_source, root_dir)
 			if err != nil {
 				return response, err
 			}
@@ -55,11 +55,11 @@ func (l *LinkItem) FindMatchingSources(path string) ([]string, error) {
 }
 
 
-func (l *LinkItem) Expand() ([]Link, error) {
+func (l *LinkItem) Expand(root_dir string) ([]Link, error) {
 	var response []Link
 	for _, og_source := range l.Sources {
 
-		og_source, err := paths.Normalize(og_source)
+		og_source, err := paths.NormalizeWithRoot(og_source, root_dir)
 		og_source_dir := filepath.Dir(og_source)
 		if err != nil {
 			return response, err
@@ -71,7 +71,7 @@ func (l *LinkItem) Expand() ([]Link, error) {
 				return response, err
 			}
 
-			sources, err = l.Filter(sources)
+			sources, err = l.Filter(sources, root_dir)
 			if err != nil {
 				return response, err
 			}
@@ -85,7 +85,7 @@ func (l *LinkItem) Expand() ([]Link, error) {
 			continue
 		}
 
-		sources, err := l.Filter([]string{og_source})
+		sources, err := l.Filter([]string{og_source}, root_dir)
 		if err != nil {
 			return response, err
 		}

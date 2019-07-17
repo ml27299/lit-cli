@@ -51,7 +51,7 @@ func buildRun(cmd *cobra.Command, args []string) {
     	bash.SubmoduleUpdate()
     }
 
-    submodules, err := GetSubmodules(dir)
+    submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
 
     config_files, err := paths.FindConfig(dir)
@@ -63,7 +63,7 @@ func buildRun(cmd *cobra.Command, args []string) {
 		err = os.Chdir(config_file_dir)
 		CheckIfError(err)
 
-		info, err := parser.ConfigViaPath(config_file_dir)
+		info, err := parser.ConfigViaPath(config_file_dir, dir)
 		CheckIfError(err)
 
 		var missing_submodules []parser.GitModule
@@ -91,7 +91,7 @@ func buildRun(cmd *cobra.Command, args []string) {
 	    }
 	}
 
-	submodules, err = GetSubmodules(dir)
+	submodules, err = GetSubmodules(dir, dir)
 	CheckIfError(err)
 
 	if branch != ""{

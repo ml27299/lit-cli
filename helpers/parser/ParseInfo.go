@@ -11,12 +11,18 @@ type ParseInfo struct {
 	Config ConfigInfo
 }
 
-func (p *ParseInfo) GetLinks() ([]Link, error) {
+func (p *ParseInfo) GetLinks(root_dir string) ([]Link, error) {
 
 	var response []Link
+
+	root_dir, err := paths.FindRootDir()
+	if err != nil {
+		return response, err
+	}
+
 	for _, item := range  p.LinkItems {
 
-		links, err := item.Expand()
+		links, err := item.Expand(root_dir)
 		if err != nil {
 			return response, err
 		}
@@ -27,12 +33,12 @@ func (p *ParseInfo) GetLinks() ([]Link, error) {
 	return response, nil
 }
 
-func (p *ParseInfo) FindMatchingLinkItems(path string) ([]LinkItem, error) {
+func (p *ParseInfo) FindMatchingLinkItems(path string, root_dir string) ([]LinkItem, error) {
 
 	var response []LinkItem
 	for _, item := range p.LinkItems {
 
-		dest, err := paths.Normalize(item.Dest)
+		dest, err := paths.NormalizeWithRoot(item.Dest, root_dir)
 		if err != nil {
 			return response, err
 		}	
@@ -45,12 +51,12 @@ func (p *ParseInfo) FindMatchingLinkItems(path string) ([]LinkItem, error) {
 	return response, nil
 }
 
-func (p *ParseInfo) FindMatchingLinkItemsBySubmodule(submodule_path, newfilepath string) ([]string, error) {
+func (p *ParseInfo) FindMatchingLinkItemsBySubmodule(submodule_path, newfilepath string, root_dir string) ([]string, error) {
 
 	var response []string
 	for _, item := range p.LinkItems {
 
-		dest, err := paths.Normalize(item.Dest)
+		dest, err := paths.NormalizeWithRoot(item.Dest, root_dir)
 		if err != nil {
 			return response, err
 		}

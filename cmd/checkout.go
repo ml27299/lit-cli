@@ -71,7 +71,7 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 	CheckIfError(err)
 
 	if debug {println("Getting submodules")}
-	submodules, err := GetSubmodules(dir)
+	submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
 
 	if submodule != "" {
@@ -85,7 +85,7 @@ func checkoutRun(cmd *cobra.Command, args []string) {
 		CheckIfError(err)
 
 		if debug {println("Getting submodules within "+submodule)}
-		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path, dir)
 		checkout(dir, submodules)
 
 		Info("Entering "+*&status.Path+"...")

@@ -32,7 +32,6 @@ var commitCmd = &cobra.Command{
 
 func commitRun(cmd *cobra.Command, args []string) {
 	var commited_status_paths []string
-
 	commit := func(dir string, submodules Modules) {
     	for i := 0; i < len(submodules); i++ {
 
@@ -63,38 +62,38 @@ func commitRun(cmd *cobra.Command, args []string) {
 			commited_status_paths = append(commited_status_paths, status.Path)
 		}
     }
-
+   
 	for index, arg := range commitBoolArgIndexMap {
 		commitBoolArgIndexMap[index] = arg.SetValue(commitBoolArgs[index])
 	}
 	for index, arg := range commitStringArgIndexMap {
 		commitStringArgIndexMap[index] = arg.SetValue(commitStringArgs[index])
 	}
-
+	
 	_args := Args.GenerateCommand(commitStringArgIndexMap, commitBoolArgIndexMap)
 	args = append(_args, args...)
 
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
-
-	submodules, err := GetSubmodules(dir)
+	
+	submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
-
+	
 	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
-
+	
 	for _, config_file := range config_files {
-
+		
 		config_file_dir := filepath.Dir(config_file)
 		err = os.Chdir(config_file_dir)
 		CheckIfError(err)
-
-		info, err := parser.ConfigViaPath(config_file_dir)
+		
+		info, err := parser.ConfigViaPath(config_file_dir, dir)
 		CheckIfError(err)
-
-		links, err := info.GetLinks()
+		
+		links, err := info.GetLinks(dir)
 		CheckIfError(err)
-
+		
 		err = UpdateGitignore(config_file_dir, links)
 		CheckIfError(err)
 	}
@@ -107,7 +106,7 @@ func commitRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 
-		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path, dir)
 		commit(dir, submodules)
 
 		err = bash.Commit(dir+"/"+*&status.Path, args)
@@ -115,7 +114,7 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 		return 
 	}
-
+	
 	Info("Entering /...")
 	err = bash.Commit(dir, args)
 	CheckIfError(err)

@@ -21,7 +21,7 @@ func parseFile(path string) error {
 	return nil
 }
 
-func ConfigLinkItems(path string, parse bool) ([]LinkItem, error) {
+func ConfigLinkItems(path string, parse bool, root_dir string) ([]LinkItem, error) {
 	var response []LinkItem
 
 	if parse {
@@ -37,18 +37,19 @@ func ConfigLinkItems(path string, parse bool) ([]LinkItem, error) {
 
 	var sources []string
 	var removeSources []string
+
 	for _, key := range keys {
 
 		dest := viper.GetString(key+".dest")
-		normalized_dest, err := paths.Normalize(dest)
+		normalized_dest, err := paths.NormalizeWithRoot(dest, root_dir)
 		if err != nil {
-			return response, err 
+			return nil, err
 		}
-
+		
 		sources_interfaces := viper.Get(key+".sources")
 		sources = nil
 		removeSources = nil
-
+		
 		for _, sources_interface := range sources_interfaces.([]interface{}) {
 			if sources_interface.(string)[:1] == "!" {
 				str := sources_interface.(string)
@@ -99,9 +100,14 @@ func ConfigModules(path string, parse bool) ([]GitModule, error) {
 	return response, nil
 }
 
-func ConfigViaPath(dir string) (ParseInfo, error) {
+func ConfigViaPath(dir string, root_dir string) (ParseInfo, error) {
 	
 	var response ParseInfo
+	// root_dir, err := paths.FindRootDir()
+	
+	// if err != nil {
+	// 	return response, err
+	// }
 	var (
 		linkItems []LinkItem
 		modules []GitModule
@@ -109,7 +115,7 @@ func ConfigViaPath(dir string) (ParseInfo, error) {
 
 	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
 		parseFile(dir+"/.litconfig")
-		linkItems, err = ConfigLinkItems(dir+"/.litconfig", false)
+		linkItems, err = ConfigLinkItems(dir+"/.litconfig", false, root_dir)
 		modules, err = ConfigModules(dir+"/.litconfig", false)
 	}else {
 		return response, err
@@ -122,27 +128,25 @@ func ConfigViaPath(dir string) (ParseInfo, error) {
 	}, nil
 }	
 
-func Config() (ParseInfo, error) {
+func Config(root_dir string) (ParseInfo, error) {
 
 	var response ParseInfo
-	dir, err := paths.FindRootDir()
+	// dir, err := paths.FindRootDir()
 	
-	if err != nil {
-		return response, err
-	}
+	// if err != nil {
+	// 	return response, err
+	// }
 
 	var (
 		linkItems []LinkItem
 		modules []GitModule
 	)
 
-	if _, err := os.Stat(dir+"/.litconfig"); err == nil {
-		parseFile(dir+"/.litconfig")
-		linkItems, err = ConfigLinkItems(dir+"/.litconfig", false)
-		modules, err = ConfigModules(dir+"/.litconfig", false)
-	}
-
-	if err != nil {
+	if _, err := os.Stat(root_dir+"/.litconfig"); err == nil {
+		parseFile(root_dir+"/.litconfig")
+		linkItems, err = ConfigLinkItems(root_dir+"/.litconfig", false, root_dir)
+		modules, err = ConfigModules(root_dir+"/.litconfig", false)
+	}else {
 		return response, err
 	}
 

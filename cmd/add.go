@@ -74,7 +74,7 @@ func addRun(cmd *cobra.Command, args []string) {
 	CheckIfError(err)
 	
 	if debug {println("Getting submodules")}
-	submodules, err := GetSubmodules(dir)
+	submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
 
 	if debug {println("Finding config files")}
@@ -89,11 +89,11 @@ func addRun(cmd *cobra.Command, args []string) {
 		CheckIfError(err)
 
 		if debug {println("Parsing config file")}
-		info, err := parser.ConfigViaPath(config_file_dir)
+		info, err := parser.ConfigViaPath(config_file_dir, dir)
 		CheckIfError(err)
 
 		if debug {println("Getting links")}
-		links, err := info.GetLinks()
+		links, err := info.GetLinks(dir)
 		CheckIfError(err)
 
 		if debug {println("Updating .gitignore in "+config_file_dir)}
@@ -112,7 +112,7 @@ func addRun(cmd *cobra.Command, args []string) {
 		CheckIfError(err)
 
 		if debug {println("Getting submodules within "+submodule)}
-		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path, dir)
 		add(dir, submodules)
 
 		Info("Entering "+*&status.Path+"...")

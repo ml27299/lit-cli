@@ -67,7 +67,7 @@ func mergeRun(cmd *cobra.Command, args []string) {
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
 
-	submodules, err := GetSubmodules(dir)
+	submodules, err := GetSubmodules(dir, dir)
 	CheckIfError(err)
 
 	if submodule != "" {
@@ -78,7 +78,7 @@ func mergeRun(cmd *cobra.Command, args []string) {
 		status, err := _submodule.Status()
 		CheckIfError(err)
 		
-		submodules, err = GetSubmodules(dir+"/"+*&status.Path)
+		submodules, err = GetSubmodules(dir+"/"+*&status.Path, dir)
 		merge(dir, submodules)
 
 		Info("Entering "+*&status.Path+"...")
