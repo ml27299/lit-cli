@@ -152,6 +152,9 @@ func FindRootDir() (string, error) {
 }
 
 func visitFind(path string, f os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
 
     if f.IsDir() || strings.Contains(f.Name(), ".git") {
         return nil
@@ -163,6 +166,9 @@ func visitFind(path string, f os.FileInfo, err error) error {
 
 
 func visitFindRootDir(path string, f os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
 
     if f.IsDir() && f.Name() == ".git" {
         paths = append(paths, path)
@@ -172,7 +178,10 @@ func visitFindRootDir(path string, f os.FileInfo, err error) error {
 }  
 
 func visitFindConfig(path string, f os.FileInfo, err error) error {
-
+	if err != nil {
+		return err
+	}
+	
     if !f.IsDir() && f.Name() == ".litconfig" {
         paths = append(paths, path)
     }
