@@ -46,22 +46,25 @@ func Link(link parser.Link) {
 
 	CheckIfError(s_err)
 
-	if d_err == nil {
-		if !os.SameFile(s_fileinfo, d_fileinfo) {
+	if debug {println("S:"+ link.Source)}
+	if debug {println("D:"+ link.Dest)}
 
+	if d_err == nil {
+		if debug {println("d_err = nil")}
+		if !os.SameFile(s_fileinfo, d_fileinfo) {
+			if debug {println("not smae file")}
 			os.Remove(link.Dest)
 			os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
 
-			if debug {println("S:"+ link.Source)}
-			if debug {println("D:"+ link.Dest)}
 			os.Link(link.Source, link.Dest)
 
 		}else {
+			if debug {println("smae file")}
 			// os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
 			// os.Link(link.Source, link.Dest)
 		}
 	} else {
-
+		if debug {println("d_err != nil")}
 		os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
 		os.Link(link.Source, link.Dest)
 	}
