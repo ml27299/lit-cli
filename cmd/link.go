@@ -49,6 +49,9 @@ func Link(link parser.Link) {
 
 			os.Remove(link.Dest)
 			os.MkdirAll(filepath.Dir(link.Dest), os.ModePerm)
+
+			if debug {println("S:"+ link.Source)}
+			if debug {println("D:"+ link.Dest)}
 			os.Link(link.Source, link.Dest)
 
 		}else {
