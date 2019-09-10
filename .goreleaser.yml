@@ -18,9 +18,6 @@ builds:
   main: .
   ldflags: -s -w -X github.com/ml27299/lit-cli/version.CurrVersion={{ .Version }} -X github.com/ml27299/lit-cli/version.CurrCommit={{ .Commit }}
   binary: lit
-  ignore:
-    - goos: windows
-      goarch: amd64
 archive:
   format: tar.gz
   format_overrides:
