@@ -39,6 +39,8 @@ func Copy(src string, dst string) (int64, error) {
 
 func Link(link parser.Link) {
 
+	if debug {println("Doing link")}
+
 	s_fileinfo, s_err := os.Stat(link.Source)
 	d_fileinfo, d_err := os.Stat(link.Dest)
 
@@ -67,25 +69,32 @@ func Link(link parser.Link) {
 }
 
 func linkRun(cmd *cobra.Command, args []string) {
+	if debug {println("Starting link")}
 
 	dir, err := paths.FindRootDir()
 	CheckIfError(err)
+
+	if debug {println("root dir:"+dir)}
 
 	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
 
 	for _, config_file := range config_files {
 
+		if debug {println("Config file:"+config_file)}
+
 		config_file_dir := filepath.Dir(config_file)
 		err = os.Chdir(config_file_dir)
 		CheckIfError(err)
+
+		if debug {println("Config file dir:"+config_file_dir)}
 
 		info, err := parser.ConfigViaPath(config_file_dir, dir)
 		CheckIfError(err)
 
 		links, err := info.GetLinks(dir)
 		CheckIfError(err)
-		
+		if debug {println(links)}
 		err = UpdateGitignore(config_file_dir, links)
 		CheckIfError(err)
 
