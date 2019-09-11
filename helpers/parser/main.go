@@ -7,6 +7,7 @@ import(
 	"strings"
 	"os"
 	"github.com/spf13/viper"
+	"runtime"
 )
 
 func parseFile(path string) error {
@@ -35,20 +36,27 @@ func ConfigLinkItems(path string, parse bool, root_dir string) ([]LinkItem, erro
 		}
 	}
 
-	var sources []string
-	var removeSources []string
+	// var sources []string
+	// var removeSources []string
 
 	for _, key := range keys {
 
+		var sources []string
+		var removeSources []string
+
 		dest := viper.GetString(key+".dest")
+		if runtime.GOOS == "windows" {
+			dest = strings.Replace(dest, "/", "\\", -1)
+		}
+
 		normalized_dest, err := paths.NormalizeWithRoot(dest, root_dir)
 		if err != nil {
 			return nil, err
 		}
 		
 		sources_interfaces := viper.Get(key+".sources")
-		sources = nil
-		removeSources = nil
+		// sources = nil
+		// removeSources = nil
 		
 		for _, sources_interface := range sources_interfaces.([]interface{}) {
 			if sources_interface.(string)[:1] == "!" {
@@ -56,6 +64,15 @@ func ConfigLinkItems(path string, parse bool, root_dir string) ([]LinkItem, erro
 				removeSources = append(removeSources, str[1:len(str)])
 			}else {
 				sources = append(sources, sources_interface.(string))
+			}
+		}
+
+		if runtime.GOOS == "windows" {
+			for i, _ := range sources {
+				sources[i] = strings.Replace(sources[i], "/", "\\", -1)
+			}
+			for z, _ := range removeSources {
+				removeSources[z] = strings.Replace(removeSources[z], "/", "\\", -1)
 			}
 		}
 

@@ -3,6 +3,7 @@ import(
 	//"fmt"
 	"strings"
 	"github.com/ml27299/lit-cli/helpers/paths"
+	"runtime"
 )
 
 type ParseInfo struct {
@@ -67,7 +68,7 @@ func (p *ParseInfo) FindMatchingLinkItemsBySubmodule(submodule_path, newfilepath
 
 		for _, source := range item.Sources {
 
-			if !strings.Contains(source, "/*") {
+			if !strings.Contains(source, "*") {
 				continue
 			}
 
@@ -76,9 +77,16 @@ func (p *ParseInfo) FindMatchingLinkItemsBySubmodule(submodule_path, newfilepath
 				return response, err
 			}
 			
-			if source == submodule_path+"/*" {
-				response = AppendUnique(response, item.Dest)
-				break
+			if runtime.GOOS == "windows" {
+				if source == submodule_path+"\\*" {
+					response = AppendUnique(response, item.Dest)
+					break
+				}
+			}else {
+				if source == submodule_path+"/*" {
+					response = AppendUnique(response, item.Dest)
+					break
+				}
 			}
 		}
 	}

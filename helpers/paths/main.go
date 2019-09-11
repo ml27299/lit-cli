@@ -6,6 +6,7 @@ import (
 	"strings"
 	"path/filepath"
 	"errors"
+	"runtime"
 )
 
 var paths []string
@@ -45,7 +46,17 @@ func NormalizeWithRoot(str string, root_dir string) (string, error) {
 	}else {
 		response =  dir+"/"+str
 	}
+
+	if runtime.GOOS == "windows" { 
+		response = strings.Replace(response, "/", "\\", -1)
 	
+		if response[len(response)-1:] == "\\" {
+			response = response[:len(response)-2]
+		}
+
+		return response, nil
+	}
+
 	if response[len(response)-1:] == "/" {
 		response = response[:len(response)-2]
 	}
@@ -93,7 +104,17 @@ func Normalize(str string) (string, error) {
 	}else {
 		response =  dir+"/"+str
 	}
+		
+	if runtime.GOOS == "windows" { 
+		response = strings.Replace(response, "/", "\\", -1)
 	
+		if response[len(response)-1:] == "\\" {
+			response = response[:len(response)-2]
+		}
+
+		return response, nil
+	}
+
 	if response[len(response)-1:] == "/" {
 		response = response[:len(response)-2]
 	}

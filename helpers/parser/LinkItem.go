@@ -4,6 +4,7 @@ import(
 	"strings"
 	"path/filepath"
 	"github.com/ml27299/lit-cli/helpers/paths"
+	"runtime"
 )
 
 type LinkItem struct {
@@ -44,7 +45,7 @@ func (l *LinkItem) FindMatchingSources(path string) ([]string, error) {
 	
 	var response []string
 	for _, og_source := range l.Sources {
-		if !strings.Contains(og_source, "/*"){
+		if !strings.Contains(og_source, "*"){
 			continue
 		}
 
@@ -65,7 +66,7 @@ func (l *LinkItem) Expand(root_dir string) ([]Link, error) {
 			return response, err
 		}
 
-		if strings.Contains(og_source, "/*"){
+		if strings.Contains(og_source, "*"){
 			sources, err := paths.Find(filepath.Dir(og_source))
 			if err != nil {
 				return response, err
@@ -119,7 +120,13 @@ func (l *LinkItem) CreateLinks(sources []string, og_source_dir string) ([]Link, 
 func (l *LinkItem) CreateLink(source string, og_source_dir string) (Link, error) {
 
 	source_dir := filepath.Dir(source)
-	source_slice := strings.Split(source, "/")
+	var source_slice []string
+
+	if runtime.GOOS == "windows" {
+		source_slice = strings.Split(source, "\\")
+	}else {
+		source_slice = strings.Split(source, "/")
+	}
 	source_name := source_slice[len(source_slice) - 1]
 
 	dest := l.NormalizedDest
@@ -128,8 +135,15 @@ func (l *LinkItem) CreateLink(source string, og_source_dir string) (Link, error)
 		dest = dest+dest_ext
 	}
 
-	return Link{
-		Dest: dest+"/"+source_name,
-		Source: source,
-	}, nil
+	if runtime.GOOS == "windows" {
+		return Link{
+			Dest: dest+"\\"+source_name,
+			Source: source,
+		}, nil
+	}else {
+		return Link{
+			Dest: dest+"/"+source_name,
+			Source: source,
+		}, nil
+	}
 }

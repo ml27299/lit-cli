@@ -10,6 +10,7 @@ import (
 	//"fmt"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 )
 
 type ModuleConfig struct{
@@ -88,7 +89,11 @@ func GetSubmodules(path string, root_dir string) (Modules, error){
 		submodule_config := submodule.Config()
 		ext := ""
 		if path != root_dir {
-			ext = strings.Replace(path, root_dir+"/", "", 1)
+			if runtime.GOOS == "windows" {
+				ext = strings.Replace(path, root_dir+"\\", "", 1)
+			}else {
+				ext = strings.Replace(path, root_dir+"/", "", 1)
+			}
 		}
 
 		response = append(response, &Module{
@@ -96,7 +101,15 @@ func GetSubmodules(path string, root_dir string) (Modules, error){
 			Submodule: submodule,
 		})
 
-		modules, err := GetSubmodules(path+"/"+submodule_config.Path, root_dir)
+		var submodule_path string
+		if runtime.GOOS == "windows" {
+			submodule_path = path+"\\"+submodule_config.Path
+		}else {
+			submodule_path = path+"/"+submodule_config.Path
+		}
+
+		modules, err := GetSubmodules(submodule_path, root_dir)
+
 		if err != nil {
 			return response, err
 		}
@@ -162,7 +175,11 @@ func FindSubmodule(submodules Modules, value string) (*Module, error) {
 
 	ext := ""
 	if config_file_match != "" && config_file_match != dir {
-		ext = strings.Replace(config_file_match, dir+"/", "", 1)
+		if runtime.GOOS == "windows" {
+			ext = strings.Replace(config_file_match, dir+"\\", "", 1)
+		}else {
+			ext = strings.Replace(config_file_match, dir+"/", "", 1)
+		}
 	}
 	
 	for i := 0; i < len(submodules); i++ {
@@ -172,10 +189,19 @@ func FindSubmodule(submodules Modules, value string) (*Module, error) {
 			return response, err
  		}
 
-		if ext != "" && status.Path == ext+"/"+value {
-			response = submodules[i]
-			break
-		}else if status.Path == value {
+ 		if runtime.GOOS == "windows" {
+			if ext != "" && status.Path == ext+"\\"+value {
+				response = submodules[i]
+				break
+			}
+		}else {
+			if ext != "" && status.Path == ext+"/"+value {
+				response = submodules[i]
+				break
+			}
+		}
+
+	 	if status.Path == value {
 			response = submodules[i]
 			break
 		}
@@ -198,7 +224,11 @@ func FindSubmodule(submodules Modules, value string) (*Module, error) {
 
 		cmd := "git config -f .gitmodules --list"
 		if ext != "" {
-			cmd = "git config -f "+dir+"/"+ext+"/.gitmodules --list"
+			if runtime.GOOS == "windows" {
+				cmd = "git config -f "+dir+"\\"+ext+"\\.gitmodules --list"
+			}else {
+				cmd = "git config -f "+dir+"/"+ext+"/.gitmodules --list"
+			}
 		}
 
 		out, err := exec.Command("sh", "-c", cmd).Output()
