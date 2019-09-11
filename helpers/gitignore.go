@@ -9,6 +9,7 @@ import (
 	"os"
 	"github.com/ml27299/lit-cli/helpers/resources"
 	"github.com/ml27299/lit-cli/helpers/parser"
+	"runtime"
 )
 
 func UpdateGitignore(path string, links []parser.Link) error {
@@ -36,7 +37,11 @@ func UpdateGitignore(path string, links []parser.Link) error {
 
 	var link_dests []string
 	for _, link := range links {
-		link_dests = append(link_dests, strings.Replace(link.Dest, path, "", -1))
+		if runtime.GOOS == "windows" {
+			link_dests = append(link_dests, strings.Replace(strings.Replace(link.Dest, path, "", -1), "\\", "/", -1))
+		}else {
+			link_dests = append(link_dests, strings.Replace(link.Dest, path, "", -1))
+		}
 	}
 
 	sort.Sort(sort.StringSlice(link_dests))
