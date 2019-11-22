@@ -59,14 +59,14 @@ func NormalizeWithRoot(str string, root_dir string) (string, error) {
 		response = strings.Replace(response, "/", "\\", -1)
 	
 		if response[len(response)-1:] == "\\" {
-			response = response[:len(response)-2]
+			response = response[:len(response)-1]
 		}
 
 		return response, nil
 	}
 
 	if response[len(response)-1:] == "/" {
-		response = response[:len(response)-2]
+		response = response[:len(response)-1]
 	}
 
 	return response, nil
