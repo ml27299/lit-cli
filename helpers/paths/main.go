@@ -41,10 +41,18 @@ func NormalizeWithRoot(str string, root_dir string) (string, error) {
 		return dir, errors.New("couldnt find dirctory for normalization...")
 	}
 
-	if str[:1] == "/" {
-		response = dir+str
+	if len(str) > 0 {
+		if len(str) > 1 && str[:2] == "./" {
+			response = dir+"/"+str[2:]
+		}else if str[0:] == "." {
+			response = dir
+		}else if str[:1] == "/" {
+			response = dir+str
+		}else {
+			response =  dir+"/"+str
+		}
 	}else {
-		response =  dir+"/"+str
+		response = dir
 	}
 
 	if runtime.GOOS == "windows" { 
