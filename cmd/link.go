@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"os"
+	//"fmt"
 	"io"
+	"strings"
 	"github.com/spf13/cobra"
 	"github.com/ml27299/lit-cli/helpers/parser"
 	"github.com/ml27299/lit-cli/helpers/paths"
@@ -71,6 +73,7 @@ func Link(link parser.Link) {
 
 }
 
+
 func linkRun(cmd *cobra.Command, args []string) {
 	if debug {println("Starting link")}
 
@@ -81,6 +84,8 @@ func linkRun(cmd *cobra.Command, args []string) {
 
 	config_files, err := paths.FindConfig(dir)
 	CheckIfError(err)
+
+	link_map := make(map[string][]parser.Link)
 
 	for _, config_file := range config_files {
 
@@ -98,6 +103,28 @@ func linkRun(cmd *cobra.Command, args []string) {
 		links, err := info.GetLinks(dir)
 		CheckIfError(err)
 		if debug {println(links)}
+
+		link_map[config_file_dir] = links
+
+	}
+
+	for config_file_dir, links := range link_map {
+		for config_file_dir2, _ := range link_map {
+			if config_file_dir2 != config_file_dir {
+				for _, link := range links {
+					var links_to_add []parser.Link
+					if strings.Contains(link.Dest, config_file_dir2) == true {
+						links_to_add = append(links_to_add, link)
+					}
+					if len(links_to_add) > 0 {
+						link_map[config_file_dir2] = parser.AppendUniqueLinks(link_map[config_file_dir2], links_to_add)
+					}
+				}
+			}
+		}
+	}
+
+	for config_file_dir, links := range link_map {
 		err = UpdateGitignore(config_file_dir, links)
 		CheckIfError(err)
 
