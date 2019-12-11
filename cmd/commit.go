@@ -114,15 +114,15 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 		return 
 	}
-	
+
 	Info("Entering /...")
 	err = bash.Commit(dir, args)
 	CheckIfError(err)
 
 	commit(dir, submodules)
-
 	SyncCommitIds(submodules, dir)
-
+	
+	
 	// if len(commited_status_paths) > 0 {
 
 	// 	Info("Entering /...")

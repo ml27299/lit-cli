@@ -100,8 +100,6 @@ func SyncCommitIds(submodules helpers.Modules, dir string) {
 		helpers.CheckIfError(err)
 
 		if len(submoduleMap[status.Path]) > 0 {
-			println(dir+"/"+submoduleMap[status.Path])
-			println(strings.Replace(status.Path, submoduleMap[status.Path]+"/", "", 1))
 			bash.AddViaBash(dir+"/"+submoduleMap[status.Path], strings.Replace(status.Path, submoduleMap[status.Path]+"/", "", 1))
 		}else {
 			bash.AddViaBash(dir, status.Path)
@@ -112,13 +110,25 @@ func SyncCommitIds(submodules helpers.Modules, dir string) {
 		changes, err := bash.HasCommitChanges(dir+"/"+modulePath)
 		helpers.CheckIfError(err)
 		if changes {
+			helpers.Info("Entering /"+modulePath)
 			bash.CommitViaBash(dir+"/"+modulePath, "-m \"synced commit id\"")
+		}
+	}
+
+	for h := 0; h < len(submodules); h++ {
+
+		status, err := submodules[h].Status()
+		helpers.CheckIfError(err)
+
+		if len(submoduleMap[status.Path]) == 0 {
+			bash.AddViaBash(dir, status.Path)
 		}
 	}
 
 	changes, err := bash.HasCommitChanges(dir)
 	helpers.CheckIfError(err)
 	if changes {
+		helpers.Info("Entering /...")
 		bash.CommitViaBash(dir, "-m \"synced commit id\"")
 	}
 
