@@ -30,6 +30,7 @@ var pullCmd = &cobra.Command{
 	},
 }
 
+
 func pullRun(cmd *cobra.Command, args []string) {
 
 	pull := func(dir string, submodules Modules) {
@@ -94,18 +95,20 @@ func pullRun(cmd *cobra.Command, args []string) {
 	err = bash.Pull(dir+"/", args)
 	CheckIfError(err)
 
-	for i := 0; i < len(submodules); i++ {
-		status, err := submodules[i].Status()
-		CheckIfError(err)
+	SyncCommitIds(submodules, dir, dir)
 
-		bash.AddViaBash(dir, status.Path)
-	}
+	// for i := 0; i < len(submodules); i++ {
+	// 	status, err := submodules[i].Status()
+	// 	CheckIfError(err)
 
-	changes, err := bash.HasCommitChanges(dir)
-	CheckIfError(err)
-	if changes {
-		bash.CommitViaBash(dir, "-m \"synced commit id\"")
-	}
+	// 	bash.AddViaBash(dir, status.Path)
+	// }
+
+	// changes, err := bash.HasCommitChanges(dir)
+	// CheckIfError(err)
+	// if changes {
+	// 	bash.CommitViaBash(dir, "-m \"synced commit id\"")
+	// }
 }
 
 func init() {

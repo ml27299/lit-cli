@@ -16,7 +16,10 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 	"os"
+	"github.com/ml27299/lit-cli/helpers"
+	"github.com/ml27299/lit-cli/helpers/bash"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,6 +63,63 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&interactive, "inter", false, "Run lit in interactivce mode")
 	rootCmd.PersistentFlags().StringVar(&submodule, "submodule", "", "run a lit command for one submodule")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "Get a verbose log of whats lit is doing")
+}
+
+
+func SyncCommitIds(submodules helpers.Modules, dir string, root_dir string) {
+	
+	submoduleMap := make(map[string]string)
+
+	for i := 0; i < len(submodules); i++ {
+		
+		status, err := submodules[i].Status()
+		helpers.CheckIfError(err)
+
+		for z := 0; z < len(submodules); z++ {
+			if submodules[z] != submodules[i] {
+
+				status2, err := submodules[z].Status()
+				helpers.CheckIfError(err)
+
+				if len(status.Path) > len(status2.Path) {
+					if strings.Contains(status.Path, status2.Path) == true {
+						submoduleMap[status.Path] = status2.Path
+					}
+				}else {
+					if strings.Contains(status2.Path, status.Path) == true {
+						submoduleMap[status2.Path] =  status.Path
+					}
+				}
+			}
+		}
+	}
+
+	for i := 0; i < len(submodules); i++ {
+
+		status, err := submodules[i].Status()
+		helpers.CheckIfError(err)
+
+		if len(submoduleMap[status.Path]) > 0 {
+			bash.AddViaBash(dir+"/"+submoduleMap[status.Path], strings.Replace(status.Path, submoduleMap[status.Path]+"/", "", 1))
+		}else {
+			bash.AddViaBash(dir, status.Path)
+		}
+	}
+
+	for _, modulePath := range submoduleMap {
+		changes, err := bash.HasCommitChanges(dir+"/"+modulePath)
+		helpers.CheckIfError(err)
+		if changes {
+			bash.CommitViaBash(dir+"/"+modulePath, "-m \"synced commit id\"")
+		}
+	}
+
+	changes, err := bash.HasCommitChanges(dir)
+	helpers.CheckIfError(err)
+	if changes {
+		bash.CommitViaBash(dir, "-m \"synced commit id\"")
+	}
+
 }
 
 

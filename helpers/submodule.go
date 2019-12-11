@@ -62,7 +62,7 @@ func (m *Module) Config() (*ModuleConfig) {
 }
 
 func GetSubmodules(path string, root_dir string) (Modules, error){
-
+	
 	var response Modules
 	repo, err := git.PlainOpen(path)
 	if err != nil {
