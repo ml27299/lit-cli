@@ -95,7 +95,7 @@ func pullRun(cmd *cobra.Command, args []string) {
 	err = bash.Pull(dir+"/", args)
 	CheckIfError(err)
 
-	SyncCommitIds(submodules, dir, dir)
+	SyncCommitIds(submodules, dir)
 
 	// for i := 0; i < len(submodules); i++ {
 	// 	status, err := submodules[i].Status()

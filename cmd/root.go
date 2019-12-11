@@ -66,7 +66,7 @@ func init() {
 }
 
 
-func SyncCommitIds(submodules helpers.Modules, dir string, root_dir string) {
+func SyncCommitIds(submodules helpers.Modules, dir string) {
 	
 	submoduleMap := make(map[string]string)
 
@@ -100,6 +100,8 @@ func SyncCommitIds(submodules helpers.Modules, dir string, root_dir string) {
 		helpers.CheckIfError(err)
 
 		if len(submoduleMap[status.Path]) > 0 {
+			println(dir+"/"+submoduleMap[status.Path])
+			println(strings.Replace(status.Path, submoduleMap[status.Path]+"/", "", 1))
 			bash.AddViaBash(dir+"/"+submoduleMap[status.Path], strings.Replace(status.Path, submoduleMap[status.Path]+"/", "", 1))
 		}else {
 			bash.AddViaBash(dir, status.Path)

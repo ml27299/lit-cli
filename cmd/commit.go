@@ -121,7 +121,7 @@ func commitRun(cmd *cobra.Command, args []string) {
 
 	commit(dir, submodules)
 
-	SyncCommitIds(submodules, dir, dir)
+	SyncCommitIds(submodules, dir)
 
 	// if len(commited_status_paths) > 0 {
 
