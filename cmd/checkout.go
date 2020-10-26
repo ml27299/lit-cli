@@ -56,10 +56,10 @@ func checkoutRun(cmd *cobra.Command, args []string) {
     }
 
 	for index, arg := range checkoutBoolArgIndexMap {
-		arg.SetValue(checkoutBoolArgs[index])
+		checkoutBoolArgIndexMap[index] = arg.SetValue(checkoutBoolArgs[index])
 	}
 	for index, arg := range checkoutStringArgIndexMap {
-		arg.SetValue(checkoutStringArgs[index])
+		checkoutStringArgIndexMap[index] = arg.SetValue(checkoutStringArgs[index])
 	}
 
 	if debug {println("Generating command")}
@@ -118,18 +118,18 @@ func init() {
 	checkoutBoolArgIndexMap[3] = Args.BoolArg{ Long: "force", Short: "f" }
 	checkoutBoolArgIndexMap[4] = Args.BoolArg{ Long: "ours", Short: "" }
 	checkoutBoolArgIndexMap[5] = Args.BoolArg{ Long: "theirs", Short: "" }
-	checkoutBoolArgIndexMap[6] = Args.BoolArg{ Long: "b", Short: "b" }
-	checkoutBoolArgIndexMap[7] = Args.BoolArg{ Long: "B", Short: "B" }
-	checkoutBoolArgIndexMap[8] = Args.BoolArg{ Long: "track", Short: "t" }
-	checkoutBoolArgIndexMap[9] = Args.BoolArg{ Long: "no-track", Short: "" }
-	checkoutBoolArgIndexMap[10] = Args.BoolArg{ Long: "l", Short: "l" }
-	checkoutBoolArgIndexMap[11] = Args.BoolArg{ Long: "detach", Short: "" }
-	checkoutBoolArgIndexMap[12] = Args.BoolArg{ Long: "ignore-skip-worktree-bits", Short: "" }
-	checkoutBoolArgIndexMap[13] = Args.BoolArg{ Long: "merge", Short: "m" }
-	checkoutBoolArgIndexMap[14] = Args.BoolArg{ Long: "patch", Short: "p" }
-	checkoutBoolArgIndexMap[15] = Args.BoolArg{ Long: "ignore-other-worktrees", Short: "" }
-	checkoutBoolArgIndexMap[16] = Args.BoolArg{ Long: "recurse-submodules", Short: "" }
-	checkoutBoolArgIndexMap[17] = Args.BoolArg{ Long: "no-recurse-submodules", Short: "" }
+	checkoutBoolArgIndexMap[6] = Args.BoolArg{ Long: "B", Short: "B" }
+	checkoutBoolArgIndexMap[7] = Args.BoolArg{ Long: "track", Short: "t" }
+	checkoutBoolArgIndexMap[8] = Args.BoolArg{ Long: "no-track", Short: "" }
+	checkoutBoolArgIndexMap[9] = Args.BoolArg{ Long: "l", Short: "l" }
+	checkoutBoolArgIndexMap[10] = Args.BoolArg{ Long: "detach", Short: "" }
+	checkoutBoolArgIndexMap[11] = Args.BoolArg{ Long: "ignore-skip-worktree-bits", Short: "" }
+	checkoutBoolArgIndexMap[12] = Args.BoolArg{ Long: "merge", Short: "m" }
+	checkoutBoolArgIndexMap[13] = Args.BoolArg{ Long: "patch", Short: "p" }
+	checkoutBoolArgIndexMap[14] = Args.BoolArg{ Long: "ignore-other-worktrees", Short: "" }
+	checkoutBoolArgIndexMap[15] = Args.BoolArg{ Long: "recurse-submodules", Short: "" }
+	checkoutBoolArgIndexMap[16] = Args.BoolArg{ Long: "no-recurse-submodules", Short: "" }
+	checkoutBoolArgIndexMap[17] = Args.BoolArg{ Long: "b", Short: "b" }
 
 	for index, val := range checkoutBoolArgIndexMap {
 		checkoutCmd.Flags().BoolVarP(&checkoutBoolArgs[index], val.Long, val.Short, false,  DocRoot+"/"+checkoutSlug+"#"+checkoutSlug+"-"+val.Long)

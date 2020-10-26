@@ -14,7 +14,7 @@ func Checkout(path string, args []string) error {
 
     args = append([]string{"checkout"}, args...)
     cmd := exec.Command("git", args...)
-
+     
     cmd.Stdin = os.Stdin
     cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
